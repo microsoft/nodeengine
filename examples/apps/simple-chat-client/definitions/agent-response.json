@@ -1,0 +1,83 @@
+{
+  "key": "agent_response",
+  "session_id": "test",
+  "context": {
+    "agent": {
+      "id": "default",
+      "name": "IC Chatbot",
+      "description": "This agent is a general purpose chatbot."
+    }
+  },
+  "flow": [
+    {
+      "key": "extracting_intent",
+      "name": "EmitEvents",
+      "config": {
+        "events": [
+          {
+            "event": "status",
+            "data": "extracting intent..."
+          }
+        ]
+      }
+    },
+    {
+      "key": "extract_intent",
+      "name": "IntentExtraction"
+    },
+    {
+      "key": "agent_responding",
+      "name": "EmitEvents",
+      "config": {
+        "events": [
+          {
+            "event": "status",
+            "data": "agent responding..."
+          }
+        ]
+      }
+    },
+    {
+      "key": "generate_response",
+      "name": "GenerateResponse",
+      "config": {
+        "service": "AZUREOPENAI_CHATCOMPLETION_GPT4",
+        "prompts": [
+          {
+            "role": "system",
+            "content": "Provide a response to the last message.\n\nIf the response requires information that is not available from the chat history or the provided context, either admit that you don't know the answer or ask for more information from the user. Do not make up or assume information that is not supported by evidence. Be honest and respectful in your communication."
+          }
+        ],
+        "target": "response",
+        "include_debug": true
+      }
+    },
+    {
+      "key": "store_response",
+      "name": "StoreContent",
+      "config": {
+        "source": "response",
+        "key": "messages"
+      }
+    },
+    {
+      "key": "new_response_event",
+      "name": "EmitEvents",
+      "config": {
+        "events": [
+          {
+            "event": "messages:changed",
+            "source": "agent"
+          }
+        ]
+      }
+    },
+    {
+      "key": "end_flow",
+      "name": "EmitEvents",
+      "config": {
+        "events": ["status"]
+      }
+    }
+  ]
+}

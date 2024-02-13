@@ -1,0 +1,10 @@
+{
+  "key": "software_expert_agent_response",
+  "context": {
+    "agent": {
+      "id": "software_expert",
+      "name": "Software Expert",
+      "description": "Agent is an expert in software development. If the user asks a question about software development, the agent should be able to answer it. If the user asks a question about something else, the agent should admit that it doesn't know the answer."
+    }
+  }
+}

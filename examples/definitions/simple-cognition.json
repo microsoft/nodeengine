@@ -1,0 +1,29 @@
+{
+  "key": "simple_cognition",
+  "session_id": "test",
+  "context": {
+    "input": ["Hello world", "Hi, how are you?"]
+  },
+  "flow": [
+    {
+      "key": "store_content",
+      "name": "StoreContent",
+      "config": {
+        "source": "content",
+        "clear_source": true
+      }
+    },
+    {
+      "key": "extract_memories",
+      "name": "ExtractMemories"
+    },
+    {
+      "key": "store_memories",
+      "name": "StoreContent",
+      "config": {
+        "source": "memories",
+        "clear_source": true
+      }
+    }
+  ]
+}

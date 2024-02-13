@@ -1,0 +1,74 @@
+{
+  "key": "agent_response",
+  "context": {
+    "agent": {
+      "id": "agent",
+      "name": "Agent",
+      "description": "The agent is a general AI assistant that can help you. It will also yield to others when they are better suited to answer your questions."
+    }
+  },
+  "flow": [
+    {
+      "key": "extract_intent",
+      "name": "IntentExtraction"
+    },
+    {
+      "key": "generate_response",
+      "name": "GenerateResponse",
+      "config": {
+        "service": "AZUREOPENAI_CHATCOMPLETION_GPT4",
+        "prompts": [
+          {
+            "role": "system",
+            "content": "If appropriate, provide a response to the last message. If it appears the last message was intended for another user, send {{silence}} as the assistant response. There is no need to answer every request, there are other assistants in the chat as well, each will answer in their areas of specialization.\n\nIf the response requires information that is not available from the chat history or the provided context, either admit that you don't know the answer or ask for more information from the user. Do not make up or assume information that is not supported by evidence. Be honest and respectful in your communication."
+          }
+        ],
+        "target": "response",
+        "include_debug": true
+      }
+    },
+    {
+      "key": "store_response",
+      "name": "StoreContent",
+      "config": {
+        "source": "response",
+        "key": "messages"
+      }
+    },
+    {
+      "key": "new_response_event",
+      "name": "EmitEvents",
+      "config": {
+        "events": [
+          {
+            "event": "messages:changed",
+            "data": "agent"
+          }
+        ]
+      }
+    },
+    {
+      "key": "background_processes",
+      "name": "BackgroundProcess",
+      "config": {
+        "flow": [
+          {
+            "key": "generate_whiteboard",
+            "name": "GenerateWhiteboard",
+            "config": {
+              "include_debug": true
+            }
+          },
+          {
+            "key": "store_whiteboard",
+            "name": "StoreContent",
+            "config": {
+              "source": "whiteboard",
+              "key": "whiteboard"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

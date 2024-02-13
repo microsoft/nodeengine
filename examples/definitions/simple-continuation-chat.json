@@ -1,0 +1,46 @@
+{
+  "key": "simple_continuation_chat",
+  "session_id": "test",
+  "context": {
+    "input": "Hello World"
+  },
+  "flow": [
+    {
+      "key": "store_input",
+      "name": "StoreContent",
+      "config": {
+        "source": "messages",
+        "clear_source": true
+      }
+    },
+    {
+      "key": "extract_intent",
+      "name": "IntentExtraction"
+    },
+    {
+      "key": "generate_response",
+      "name": "GenerateResponse",
+      "config": {
+        "service": "AZUREOPENAI_CHATCOMPLETION_GPT4"
+      }
+    },
+    {
+      "key": "store_response",
+      "name": "StoreContent",
+      "config": {
+        "source": "messages",
+        "clear_source": true
+      }
+    },
+    {
+      "key": "generate_more",
+      "name": "EvaluateContinue",
+      "config": {
+        "outputs": {
+          "yes": "extract_intent",
+          "no": "exit"
+        }
+      }
+    }
+  ]
+}

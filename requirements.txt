@@ -1,0 +1,14 @@
+# Quickstart:
+# python3 -m venv .venv
+# .venv\Scripts\activate    (or: source .venv/bin/activate)
+# pip3 install --upgrade pip
+# pip3 install -r requirements.txt
+
+nicegui==1.4.12
+openai==1.9.0
+print-color==0.4.6
+sse-starlette==1.8.2
+sseclient==0.0.27
+
+# install node-engine package in editable mode so it can be imported from py scripts
+-e .

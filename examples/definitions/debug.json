@@ -1,0 +1,11 @@
+{
+  "key": "debug-agent-response",
+  "session_id": "test",
+  "context": {},
+  "flow": [
+    {
+      "key": "debug__agent_response",
+      "name": "DebugAgentResponse"
+    }
+  ]
+}

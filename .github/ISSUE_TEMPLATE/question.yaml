@@ -1,0 +1,21 @@
+name: 🤷🏻‍♀️ Question
+description: Question about XYZ
+title: "[Question] "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please provide sufficient information to answer your question.
+  - type: textarea
+    attributes:
+      label: Context / Scenario
+      description: Help us understanding the scenario you are working on and how you are using XYZ. The more information you can provide here, the better.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Question
+      description: Enter your question here
+    validations:
+      required: true

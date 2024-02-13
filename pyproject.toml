@@ -1,0 +1,17 @@
+[project]
+name = "node-engine"
+version = "0.1.0"
+requires-python = ">=3.11,<3.12"
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+line_length = 120
+profile = "black"
+
+[tool.pyright]
+include = ["node_engine", "examples"]
+
+[tool.setuptools]
+packages = ["node_engine", "examples"]

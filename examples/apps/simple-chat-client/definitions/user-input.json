@@ -1,0 +1,25 @@
+{
+  "key": "user_input",
+  "flow": [
+    {
+      "key": "store_input",
+      "name": "StoreContent",
+      "config": {
+        "source": "input",
+        "key": "messages"
+      }
+    },
+    {
+      "key": "new_message_event",
+      "name": "EmitEvents",
+      "config": {
+        "events": [
+          {
+            "event": "messages:changed",
+            "data": "user"
+          }
+        ]
+      }
+    }
+  ]
+}

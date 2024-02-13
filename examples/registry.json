@@ -1,0 +1,193 @@
+[
+  {
+    "key": "BackgroundProcess",
+    "label": "Background Process",
+    "description": "Run a flow in the background",
+    "type": "module",
+    "config": {
+      "module": "background_process",
+      "class": "BackgroundProcess"
+    }
+  },
+  {
+    "key": "DebugAgentResponse",
+    "label": "Debug Agent Response",
+    "description": "Generate a response from the debug agent",
+    "type": "module",
+    "config": {
+      "module": "debug_agent_response",
+      "class": "DebugAgentResponse"
+    }
+  },
+  {
+    "key": "EmitEvents",
+    "label": "Emit Events",
+    "description": "Emits events to the connected clients for the current session",
+    "type": "module",
+    "config": {
+      "module": "emit_events",
+      "class": "EmitEvents"
+    }
+  },
+  {
+    "key": "EvaluateScore",
+    "label": "EvaluateScore",
+    "description": "Score the input using provided criteria.",
+    "type": "module",
+    "config": {
+      "module": "evaluate_score",
+      "class": "EvaluateScore"
+    }
+  },
+  {
+    "key": "EvaluateContinue",
+    "label": "Evaluate Continue",
+    "description": "Determines if the flow should continue",
+    "type": "module",
+    "config": {
+      "module": "evaluate_continue",
+      "class": "EvaluateContinue"
+    }
+  },
+  {
+    "key": "Experiment",
+    "label": "Experiment",
+    "description": "Run a set of tests of a flow as an experiment.",
+    "type": "module",
+    "config": {
+      "module": "experiment",
+      "class": "Experiment"
+    }
+  },
+  {
+    "key": "ExtractEmbeddings",
+    "label": "Extract Embeddings",
+    "description": "Extracts embeddings from the input",
+    "type": "module",
+    "config": {
+      "module": "extract_embeddings",
+      "class": "ExtractEmbeddings"
+    }
+  },
+  {
+    "key": "ExtractMemories",
+    "label": "Extract Memories",
+    "description": "Extracts memories from recent messages",
+    "type": "module",
+    "config": {
+      "module": "extract_memories",
+      "class": "ExtractMemories"
+    }
+  },
+  {
+    "key": "GenerateResponse",
+    "label": "Generate Response",
+    "description": "Generates a response based on the history, memories and intent",
+    "type": "module",
+    "config": {
+      "module": "generate_response",
+      "class": "GenerateResponse"
+    }
+  },
+  {
+    "key": "GenerateWhiteboard",
+    "label": "Generate Whiteboard",
+    "description": "Generates a whiteboard for a conversation",
+    "type": "module",
+    "config": {
+      "module": "generate_whiteboard",
+      "class": "GenerateWhiteboard"
+    }
+  },
+  {
+    "key": "IntentExtraction",
+    "label": "Intent Extraction",
+    "description": "Extracts the intent from recent messages",
+    "type": "module",
+    "config": {
+      "module": "intent_extraction",
+      "class": "IntentExtraction"
+    }
+  },
+  {
+    "key": "InvokeFlow",
+    "label": "Invoke Flow",
+    "description": "Load and invoke a flow (a.k.a., a child flow).",
+    "type": "module",
+    "config": {
+      "module": "invoke_flow",
+      "class": "InvokeFlow"
+    }
+  },
+  {
+    "key": "NextComponent",
+    "label": "Next Component",
+    "description": "Jumps to the specified component in the flow",
+    "type": "module",
+    "config": {
+      "module": "next_component",
+      "class": "NextComponent"
+    }
+  },
+  {
+    "key": "ProcessMemories",
+    "label": "Process Memories",
+    "description": "Processes memories from recent messages via background processing",
+    "type": "module",
+    "config": {
+      "module": "process_memories",
+      "class": "ProcessMemories"
+    }
+  },
+  {
+    "key": "Repeat",
+    "label": "Repeat",
+    "description": "A component to help create repetition loops.",
+    "type": "module",
+    "config": {
+      "module": "repeat",
+      "class": "Repeat"
+    }
+  },
+  {
+    "key": "RetrieveContent",
+    "label": "Retrieve Content",
+    "description": "Retrieves content from persistent storage",
+    "type": "module",
+    "config": {
+      "module": "retrieve_content",
+      "class": "RetrieveContent"
+    }
+  },
+  {
+    "key": "StoreContent",
+    "label": "Store Content",
+    "description": "Stores content in persistent storage",
+    "type": "module",
+    "config": {
+      "module": "store_content",
+      "class": "StoreContent"
+    }
+  },
+  {
+    "key": "GenerateResponse.Code",
+    "label": "Generate Response (Embedded Code)",
+    "description": "Generates a response based on the history, memories and intent",
+    "type": "code",
+    "config": {
+      "class": "GenerateResponse",
+      "code": "import time\nimport re\nfrom datetime import datetime\nfrom node_engine.libs.azure_openai_chat_completion import AzureOpenAIChatCompletion\nfrom node_engine.models.node_engine_component import NodeEngineComponent\nfrom node_engine.libs.storage import Storage\nfrom node_engine.libs.telemetry import Timer\n\n# Sample usage\n# {\n#     \"key\": \"sample\",\n#     \"session_id\": \"123456\",\n#     \"context\": {\n#         \"messages\": [\n#             {\n#                 \"sender\": \"user\",\n#                 \"timestamp\": 1629386400,\n#                 \"content\": \"Hello\",\n#             }\n#         ],\n#         \"intent\": \"greeting\",\n#     },\n#     \"flow\": [\n#         {\n#             \"key\": \"start\",\n#             \"name\": \"GenerateResponse\",\n#             \"config\": {\n#                 \"model\": \"gpt-35-turbo\",\n#                 \"prompts\": [\n#                     {\n#                         \"role\": \"system\",\n#                         \"content\": \"Provide a response to the last message. If it appears the last message was intended for another user, send {{silence}} as the assistant response.\\n\\nIf the response requires information that is not available from the chat history or the provided context, either admit that you don't know the answer or ask for more information from the user. Do not make up or assume information that is not supported by evidence. Be honest and respectful in your communication.\",\n#                     }\n#                 ],\n#             },\n#             \"outputs\": {\n#                 \"next\": \"exit\",\n#             },\n#         }\n#     ],\n# }\n\n\nclass GenerateResponse(NodeEngineComponent):\n    default_config = {\n        \"model\": \"gpt-35-turbo\",\n        \"prompts\": [\n            {\n                \"role\": \"system\",\n                \"content\": \"Provide a response to the last message. If it appears the last message was intended for another user, send {{silence}} as the assistant response.\\n\\nIf the response requires information that is not available from the chat history or the provided context, either admit that you don't know the answer or ask for more information from the user. Do not make up or assume information that is not supported by evidence. Be honest and respectful in your communication.\",\n            }\n        ],\n    }\n\n    azure_openai_chat_completion = AzureOpenAIChatCompletion()\n\n    async def execute(self):\n        # generate response from intent\n\n        self.log(\"Generating response\")\n\n        messages = []\n\n        intent = self.context.get(\"intent\")\n        if intent:\n            messages.append(\n                {\n                    \"role\": \"system\",\n                    \"content\": \"<INTENT>{}</INTENT>\".format(intent),\n                }\n            )\n\n        agent = self.context.get(\"agent\")\n        if agent:\n            messages.append(\n                {\n                    \"role\": \"system\",\n                    \"content\": \"<ASSISTANT_DESCRIPTION>{}</ASSISTANT_DESCRIPTION>\".format(\n                        agent[\"description\"]\n                    ),\n                }\n            )\n        else:\n            agent = {\n                \"id\": \"agent\",\n                \"name\": \"Agent\",\n            }\n\n        history = await Storage.get(self.flow_definition.session_id, \"messages\") or []\n        for message in history:\n            messages.append(\n                {\n                    \"role\": \"assistant\"\n                    if message[\"sender\"] == agent[\"name\"]\n                    else \"user\",\n                    \"content\": \"[{timestamp}] {sender}: {content}\".format(\n                        timestamp=format_timestamp(message[\"timestamp\"]),\n                        sender=message[\"sender\"],\n                        content=message[\"content\"],\n                    ),\n                }\n            )\n\n        prompts = self.config.get(\"prompts\")\n        for message in prompts:\n            messages.append({\"role\": message[\"role\"], \"content\": message[\"content\"]})\n\n        model = self.config.get(\"model\")\n\n        self.log.debug({\"messages\": messages})\n\n        timer = Timer()\n        completion = await self.azure_openai_chat_completion.create(messages, model)\n        timer.stop()\n        await self.telemetry.capture_average(\n            \"avg_chat_completion\", timer.elapsed_time()\n        )\n        await self.telemetry.capture_average(\n            \"avg_chat_completion_length\", len(completion)\n        )\n\n        # strip the name of the agent from the response\n        response = completion\n        if response.startswith(\"[\"):\n            response = re.sub(r\"\\[.*\\].*:\\s\", \"\", response)\n\n        context_messages = self.context.get(\"messages\", [])\n        context_messages.append(\n            {\n                \"sender\": agent[\"name\"],\n                \"timestamp\": int(time.time()),\n                \"content\": response,\n            }\n        )\n        self.context.set(\"messages\", context_messages)\n\n        self.flow_definition.context[\"output\"] = response\n\n        self.log(\n            \"Response generated [{model}]: {response}\".format(\n                model=model, response=response\n            )\n        )\n\n        return self.continue_flow()\n\n\ndef format_timestamp(timestamp: int):\n    # return format: 1/1/2023, 12:00:00 AM\n    return datetime.fromtimestamp(timestamp).strftime(\"%m/%d/%Y, %I:%M:%S %p\")\n"
+    }
+  },
+  {
+    "key": "ProcessMemories.Endpoint",
+    "label": "Process Memories (Self-Hosted)",
+    "description": "Processes memories from recent messages via background processing",
+    "type": "endpoint",
+    "config": {
+      "endpoint": "http://127.0.0.1:8001/",
+      "component_name": "process_memories",
+      "class_name": "ProcessMemories"
+    }
+  }
+]

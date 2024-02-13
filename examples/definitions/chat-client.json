@@ -1,0 +1,103 @@
+{
+  "key": "chat_client",
+  "session_id": "test",
+  "context": {
+    "input": [
+      {
+        "sender": "user",
+        "timestamp": 1695254714,
+        "content": "Hi there!"
+      }
+    ]
+  },
+  "flow": [
+    {
+      "key": "store_input",
+      "name": "StoreContent",
+      "config": {
+        "source": "input",
+        "key": "messages"
+      }
+    },
+    {
+      "key": "user_input_event",
+      "name": "EmitEvents",
+      "config": {
+        "events": [
+          {
+            "event": "messages:changed",
+            "data": "user",
+            "source": "input"
+          }
+        ]
+      }
+    },
+    {
+      "key": "extract_intent",
+      "name": "IntentExtraction",
+      "config": {
+        "target": "intent"
+      }
+    },
+    {
+      "key": "generate_response",
+      "name": "GenerateResponse",
+      "config": {
+        "service": "AZUREOPENAI_CHATCOMPLETION_GPT4",
+        "target": "response",
+        "include_debug": true
+      }
+    },
+    {
+      "key": "store_response",
+      "name": "StoreContent",
+      "config": {
+        "source": "response",
+        "key": "messages"
+      }
+    },
+    {
+      "key": "agent_response_event",
+      "name": "EmitEvents",
+      "config": {
+        "events": [
+          {
+            "event": "messages:changed",
+            "data": "agent",
+            "source": "response"
+          }
+        ]
+      }
+    },
+    {
+      "key": "background_processes",
+      "name": "BackgroundProcess",
+      "config": {
+        "flow": [
+          {
+            "key": "generate_whiteboard",
+            "name": "GenerateWhiteboard",
+            "config": {
+              "include_debug": true
+            }
+          },
+          {
+            "key": "store_whiteboard",
+            "name": "StoreContent",
+            "config": {
+              "source": "whiteboard",
+              "key": "whiteboard"
+            }
+          },
+          {
+            "key": "process_memories",
+            "name": "ProcessMemories",
+            "config": {
+              "include_debug": true
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

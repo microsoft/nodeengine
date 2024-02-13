@@ -1,0 +1,12 @@
+{
+  "key": "get_messages",
+  "flow": [
+    {
+      "key": "get_messages",
+      "name": "RetrieveContent",
+      "config": {
+        "key": "messages"
+      }
+    }
+  ]
+}

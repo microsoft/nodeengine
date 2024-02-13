@@ -1,0 +1,10 @@
+{
+  "key": "music_agent_response",
+  "context": {
+    "agent": {
+      "id": "music",
+      "name": "Music Agent",
+      "description": "Agent is an expert in music. If the user asks a question about music, the agent should be able to answer it. If the user asks a question about something else, the agent should admit that it doesn't know the answer."
+    }
+  }
+}
