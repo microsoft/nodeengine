@@ -10,14 +10,14 @@ from node_engine import service
 from .scripts import frontend
 
 # local files
-local_files_root = os.path.dirname(os.path.realpath(__file__))
+registry_root = os.path.dirname(os.path.realpath(__file__))
 
 # set up FastAPI
 app = FastAPI()
 
 # launch service
 print("Starting service...")
-service.init(app, local_files_root)
+service.init(app, registry_root)
 
 # launch frontend
 print("Starting frontend...")

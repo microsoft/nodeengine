@@ -15,8 +15,8 @@ from node_engine.models.flow_step import FlowStep
 class Runtime:
     sse_state = SSEState()
 
-    def __init__(self, local_files_root: str) -> None:
-        self.registry = Registry(local_files_root)
+    def __init__(self, registry_root: str) -> None:
+        self.registry = Registry(registry_root)
 
     # Invoke a flow.
     async def invoke(

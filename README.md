@@ -79,17 +79,17 @@ you can skip to the next section and start Node Engine service.
 
 - Activate the virtual environment:
 
-      # On Windows:  
+      # On Windows:
       .venv\Scripts\activate
 
       # On macOS/Linux:
       source .venv/bin/activate
 
-- Upgrade pip and installe the project dependencies: 
-    
-      pip3 install --upgrade pip
+- Upgrade pip and install the nodeengine package (as editable):
 
-      pip3 install -r requirements.txt
+      pip install --upgrade pip
+
+      pip install -e .
 
 - Create `.env` configuration file:
 
@@ -104,17 +104,17 @@ the following commands from the root of the project:
 
 - Activate the virtual environment:
 
-      # On Windows:  
+      # On Windows:
       .venv\Scripts\activate
 
       # On macOS/Linux:
       source .venv/bin/activate
 
-- Start local Node Engine service. The service should run on port 8000.
+- Start local Node Engine service. The service defaults to port 8000.
 
       # alternative with VS Code debugger:
       #    Shift+Ctrl+D and choose 'Node Engine Service'
-      python3 -m node_engine.start --local_files_root examples
+      node_engine_service --registry_root examples
 
 # Quick Tests
 
@@ -123,7 +123,7 @@ the following commands from the root of the project:
 - After starting the service, open a new console.
 - Activate the virtual environment:
 
-      # On Windows:  
+      # On Windows:
       .venv\Scripts\activate
 
       # On macOS/Linux:
@@ -147,7 +147,6 @@ the following commands from the root of the project:
 
   ![Alt text](docs/quickstart.png)
 
-
 # Next steps
 
 Once the service is running, you can run the example [scripts](../examples/scripts/)
@@ -159,10 +158,10 @@ This [invoke-flow.py](examples/scripts/invoke-flow.py) script loads a flow defin
 
 Example:
 
-1. Open a new console, activate the python virtual environment
-2. Run this command passing a session ID of your choice:
+- Open a new console, activate the python virtual environment
+- Run this command passing a session ID of your choice:
 
-       python3 examples/scripts/invoke-flow.py examples/definitions/simple-cognition.json --session_id sid123 --log_level debug --stream_log
+      python3 examples/scripts/invoke-flow.py examples/definitions/simple-cognition.json --session_id sid123 --log_level debug --stream_log
 
 ## Simple Chat client
 
@@ -174,13 +173,13 @@ This [debug-service.py](examples/scripts/debug-service.py) script attaches to th
 
 Example:
 
-1. Start the chat client in the examples folder, and copy the Session ID from the browser URL
-2. Open a new console, activate the python virtual environment
-3. Run this command passing the correct session ID:
+- Start the chat client in the examples folder, and copy the Session ID from the browser URL
+- Open a new console, activate the python virtual environment
+- Run this command passing the correct session ID:
 
-       python3 examples/scripts/debug-service.py --log_level debug sid123
+      python3 examples/scripts/debug-service.py --log_level debug sid123
 
-4. Interact with the chat app and observe logs coming through in the console.
+- Interact with the chat app and observe logs coming through in the console.
 
 ## Develop your apps
 
