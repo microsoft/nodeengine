@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/github/license/microsoft/nodeengine)](https://github.com/microsoft/nodeengine/blob/main/LICENSE)
 [![Discord](https://img.shields.io/discord/1063152441819942922?label=Discord&logo=discord&logoColor=white&color=d82679)](https://discord.gg/semantic-kernel-1063152441819942922)
 
-[Node Engine](./node_engine/service.py) is a Python-based service that executes a computational flow. It is designed for rapid prototyping of services and applications, e.g. used as a chatbot service in a larger system. Each call to the service can provide a **flow definition**, dynamically adapting the service to the needs of the caller to facilitate experimentation and multiple simultaneous scenarios with different definitions. Each flow definition provides context and a list of components to execute. Components are configured via a registry visible to the service.
+[Node Engine](./node_engine/service.py) is a Python service that executes a computational flow. It is designed for rapid prototyping of services and applications, e.g. used as a chatbot service in a larger system. Each call to the service can provide a **flow definition**, dynamically adapting the service to the needs of the caller to facilitate experimentation and multiple simultaneous scenarios with different definitions. Each flow definition provides context and a list of components to execute. Components are configured via a registry visible to the service.
 
 ## Examples
 
