@@ -8,30 +8,48 @@ from fastapi import FastAPI
 
 from . import service
 
-local_files_root = None
 
-parser = argparse.ArgumentParser(description="Node Engine")
-parser.add_argument("--reload", dest="reload", default=False)
-parser.add_argument("--local_files_root", dest="local_files_root")
-args = parser.parse_args()
+def main():
+    parser = argparse.ArgumentParser(
+        prog="node_engine_service",
+        description="Node Engine Service",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument(
+        "--host",
+        dest="host",
+        type=str,
+        default="127.0.0.1",
+        help="host IP to run service on",
+    )
+    parser.add_argument(
+        "--port", dest="port", type=int, default=8000, help="port to run service on"
+    )
+    parser.add_argument(
+        "--registry_root",
+        dest="registry_root",
+        type=str,
+        default=".",
+        help="root directory for registry and component discovery",
+    )
+    args = parser.parse_args()
 
-local_files_root = os.path.abspath(".")
-if args.local_files_root:
-    local_files_root = f"{args.local_files_root}"
+    host = args.host
+    port = args.port
+    registry_root = args.registry_root
+
     # check to see if directory exists
-    if os.path.isdir(local_files_root):
-        local_files_root = os.path.abspath(local_files_root)
-    else:
-        print(f"Directory '{local_files_root}' does not exist.")
-        exit()
+    if not os.path.isdir(registry_root):
+        print(f"Directory '{registry_root}' does not exist.")
+        exit(1)
 
-reload = False
-if args.reload:
-    reload = True
+    registry_root = os.path.abspath(registry_root)
 
+    app = FastAPI()
+    service.init(app, registry_root)
 
-app = FastAPI()
-service.init(app, local_files_root)
+    uvicorn.run(app, host=host, port=port)
+
 
 if __name__ == "__main__":
-    uvicorn.run("node_engine.start:app", reload=reload)
+    main()

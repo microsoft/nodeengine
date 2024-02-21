@@ -24,14 +24,14 @@ class ModuleComponentLoader:
         component_key: str,
         module_name: str,
         class_name: str,
-        local_files_root: str,
+        registry_root: str,
         tunnel_authorization: str | None = None,
     ) -> NodeEngineComponent:
         package = None
 
         # check if module exists in local files or any parent directories
         # until root directory is reached
-        current_path = local_files_root
+        current_path = registry_root
         while True:
             # check if module exists
             if os.path.isfile(

@@ -33,7 +33,7 @@ args = parser.parse_args()
 log_level = log.LogLevel.from_string(args.log_level)
 
 # local files
-local_files_root = os.path.dirname(os.path.realpath(__file__))
+registry_root = os.path.dirname(os.path.realpath(__file__))
 
 
 def say(message) -> None:
@@ -89,7 +89,7 @@ async def get_agent_response(log_item: LogItem) -> None:
         return
     flow_definition = FlowDefinition(**log_item.flow_definition)
 
-    debug_inspector = DebugInspector(local_files_root, flow_definition, error)
+    debug_inspector = DebugInspector(registry_root, flow_definition, error)
 
     say("Flow:")
     flow_string = json.dumps([c.model_dump() for c in debug_inspector.flow], indent=2)

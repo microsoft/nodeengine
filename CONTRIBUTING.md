@@ -49,8 +49,6 @@ DO's:
 - **DO** follow the standard coding conventions
 
   - [Python](https://pypi.org/project/black/)
-  - [Typescript](https://typescript-eslint.io/rules/)/[React](https://github.com/jsx-eslint/eslint-plugin-react/tree/master/docs/rules)
-  - [.NET](https://learn.microsoft.com/dotnet/csharp/fundamentals/coding-style/coding-conventions)
 
 - **DO** give priority to the current style of the project or file you're changing
   if it diverges from the general guidelines.

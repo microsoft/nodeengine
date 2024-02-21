@@ -26,8 +26,8 @@ root_path = str(pathlib.Path(__file__).parent.parent.parent.absolute())
 
 
 class Registry:
-    def __init__(self, local_files_root: str) -> None:
-        self.local_files_root = local_files_root
+    def __init__(self, root_path: str) -> None:
+        self.root_path = root_path
 
     # Load each time needed so that changes to the registry file are reflected
     async def list_components(self) -> list[ComponentRegistration]:
@@ -56,7 +56,7 @@ class Registry:
 
         # start in local registry and check if registry file exists, otherwise walk
         # up parent directories until root directory is reached
-        current_path = self.local_files_root
+        current_path = self.root_path
         while True:
             # check if registry file exists
             current_path_file = os.path.join(current_path, registry_file_name)
@@ -121,7 +121,7 @@ class Registry:
                     component_key,
                     component_registration.config["module"],
                     component_registration.config["class"],
-                    self.local_files_root,
+                    self.root_path,
                     tunnel_authorization,
                 )
 

@@ -13,12 +13,12 @@ from node_engine.models.flow_step import FlowStep
 from node_engine.models.sse_message import SSEMessage
 
 
-def init(fastapi_app: FastAPI, local_files_root: str) -> None:
+def init(fastapi_app: FastAPI, registry_root: str) -> None:
     """
     Adds node service engine endpoints to the FastAPI app.
     """
     app = fastapi_app
-    runtime = Runtime(local_files_root)
+    runtime = Runtime(registry_root)
 
     ####
     # Node Engine

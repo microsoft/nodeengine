@@ -2,18 +2,13 @@
 
 In addition to the steps outlined in the [quickstart](../README.md#quickstart), the following is provided to help with development and testing of new components, definitions, and scripts.
 
-If new modules are added to the core project (`~/node_engine`), the `requirements.txt` file needs to be updated:
-
-> [!IMPORTANT]  
-> Do not use `pip freeze > requirements.txt`
->
-> Edit `requirements.txt` file manually instead.
+Package dependencies are specified in the `pyproject.toml` file. Add new dependencies here.
 
 ## App Directories
 
 App Directories are a way to organize a set of components and definitions into a single directory that contains any custom files needed for the experience you are working on. This includes custom `registry.json`, components, definitions, libs, and scripts.
 
-When loading the service from a script in an app directory, you can pass in a `local_files_root` parameter to specify the root directory for the app. This will be the starting location for searching for any custom `registry.json` or component files. If not specified, the service will look for a registry in the current folder.
+When loading the service from a script in an app directory, you can pass in a `registry_root` parameter to specify the root directory for the app. This will be the starting location for searching for any custom `registry.json` or component files. If not specified, the service will look for a registry in the current folder.
 
 Example:
 
@@ -30,11 +25,11 @@ Example:
     touch myapp1/registry.json
 
     # Start service using "myapp1" component registry
-    python3 -m node_engine.start --local_files_root myapp1
+    node_engine_service --registry_root myapp1
 
-When looking for `registry.json`, Node Engine service starts by looking in `local_files_root` directory, searching up the directory tree until it finds a `registry.json` file. Each `registry.json` found is merged with the previous one, with the first one found taking precedence. This allows you to have a base `registry.json` file and then override it with a custom `registry.json` file in an app directory. The default `registry.json` file in the node_engine directory is merged last.
+When looking for `registry.json`, Node Engine service starts by looking in `registry_root` directory, searching up the directory tree until it finds a `registry.json` file. Each `registry.json` found is merged with the previous one, with the first one found taking precedence. This allows you to have a base `registry.json` file and then override it with a custom `registry.json` file in an app directory. The default `registry.json` file in the node_engine directory is merged last.
 
-When a component is loaded, it will start by looking for a `components` directory in the `local_files_root` directory. If it exists, it will check to see if the desired component file also exists within that directory. If so, it will use that version. If not, it will continue this pattern and search up the directory tree until it finds a matching component file. If no component file is found, it will then search the default `./node_engine/components` directory.
+When a component is loaded, it will start by looking for a `components` directory in the `registry_root` directory. If it exists, it will check to see if the desired component file also exists within that directory. If so, it will use that version. If not, it will continue this pattern and search up the directory tree until it finds a matching component file. If no component file is found, it will then search the default `./node_engine/components` directory.
 
 ## Service API
 

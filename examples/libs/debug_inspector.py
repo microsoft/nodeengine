@@ -13,9 +13,9 @@ from node_engine.models.log_item import LogItem
 
 class DebugInspector:
     def __init__(
-        self, local_files_root: str, flow_definition: FlowDefinition, error: str
+        self, registry_root: str, flow_definition: FlowDefinition, error: str
     ) -> None:
-        self.registry = Registry(local_files_root)
+        self.registry = Registry(registry_root)
         self.error = error
         self.flow_definition = flow_definition
         self.flow = self.flow_definition.flow
