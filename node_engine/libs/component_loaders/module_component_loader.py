@@ -36,7 +36,13 @@ class ModuleComponentLoader:
                 executor,
                 tunnel_authorization,
             )
-        except ModuleNotFoundError:
+        except ModuleNotFoundError as e:
+            if e.name != module_name:
+                stacktrace = traceback.format_exc()
+                raise Exception(
+                    f"Error importing module '{module_name}': {e}. {stacktrace}"
+                )
+
             pass
 
         package = None
@@ -57,7 +63,7 @@ class ModuleComponentLoader:
                 package = ".".join(relative_path.parts + ("components",))
                 break
             # check if at root
-            if current_path == root_path:
+            if len(current_path) <= len(root_path):
                 break
             # go up one level
             current_path = os.path.dirname(current_path)
