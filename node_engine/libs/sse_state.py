@@ -1,20 +1,33 @@
 # Copyright (c) Microsoft. All rights reserved.
 
-# State manager for server-sent events
-# This is a simple implementation of a state manager for server-sent events.
-# It is used by the SSE endpoints in the FastAPI server and the runtime in the Node Engine.
+import asyncio
+from dataclasses import dataclass
+
+from node_engine.models.flow_event import FlowEvent
+
+
+@dataclass
+class SSEConnection:
+    session_id: str
+    queue: asyncio.Queue[FlowEvent]
 
 
 class SSEState:
-    def __init__(self) -> None:
-        # connections is a dictionary of connection_id: {session_id, messages}
-        # messages is a list of messages to be sent to the client
-        self.connections = {}
+    """
+    State manager for server-sent events
+    This is a simple implementation of a state manager for server-sent events.
+    It is used by the SSE endpoints in the FastAPI server.
+    """
 
-    # Add a connection to the state
+    def __init__(self) -> None:
+        self.connections: dict[str | None, SSEConnection] = {}
+
     def add_connection(self, connection_id, session_id) -> None:
-        if connection_id not in self.connections:
-            self.connections[connection_id] = {
-                "session_id": session_id,
-                "messages": [],
-            }
+        """
+        Add a new connection
+        """
+        if connection_id in self.connections:
+            return
+        self.connections[connection_id] = SSEConnection(
+            session_id=session_id, queue=asyncio.Queue()
+        )

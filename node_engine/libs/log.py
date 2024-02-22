@@ -3,10 +3,12 @@
 import logging
 from enum import IntEnum, unique
 from typing import Any
+from node_engine.libs.logging import console_log_handler
+from node_engine.libs.logging.event_logger_handler import EventLoggerHandler
 
-from node_engine.libs.logging.sse_logger_handler import SSELoggerHandler
 from node_engine.libs.logging.status_logger_handler import StatusLoggerHandler
 from node_engine.models.flow_definition import FlowDefinition
+from node_engine.models.flow_executor import FlowExecutor
 
 DEBUG = logging.DEBUG  # 10
 INFO = logging.INFO  # 20
@@ -34,11 +36,18 @@ class LogLevel(IntEnum):
 
 class Log(logging.Logger):
     def __init__(
-        self, namespace: str, flow_definition: FlowDefinition, level=LogLevel.DEBUG
+        self,
+        namespace: str,
+        flow_definition: FlowDefinition,
+        executor: FlowExecutor,
+        level=LogLevel.DEBUG,
     ):
         super().__init__(namespace, level.value)
         self.addHandler(StatusLoggerHandler(namespace, flow_definition))
-        self.addHandler(SSELoggerHandler(namespace, flow_definition))
+        self.addHandler(
+            EventLoggerHandler(namespace, flow_definition, executor=executor)
+        )
+        self.addHandler(console_log_handler.new(flow_definition))
 
     def __call__(self, message, *args, **kwargs) -> None:
         self.info(message, *args, **kwargs)

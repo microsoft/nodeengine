@@ -5,13 +5,13 @@ This script is a CLI tool to invoke a flow definition. It has a few nice
 features:
 
 - It will stream log messages to the console at whatever log level you specify
-  with --log_level.
+  with --log-level.
 - When the flow completes, it will print the final context.
 - Sub-flows need to be passed into the InvokeFlow via context. If your flow uses
   InvokeFlow, you can add sub-flows from other files using `--subflows`.
 - If you would rather POST your flow to the Node Engine Service directly, this
   script can produce the flow for you (unpacking sub-flows) by using the
-  --dry_run flag.
+  --dry-run flag.
 """
 
 import argparse
@@ -22,31 +22,31 @@ import os
 from print_color import print
 
 import node_engine.libs.log as log
-from node_engine.client import invoke
+from node_engine.client import NodeEngineClient
 from node_engine.models.flow_definition import FlowDefinition
+from node_engine.models.flow_event import FlowEvent
 from node_engine.models.log_item import LogItem
-from node_engine.models.sse_message import SSEMessage
-from examples.libs.sse_listener import SSEListener
+from node_engine.sse_listener import SSEListener
 
 # Require a flow file name as a command line argument.
 # Will also display usage message if no arguments or -h/--help is provided.
 parser = argparse.ArgumentParser(description="Invoke flow via node-engine service")
 parser.add_argument("definition_file", help="definition file name")
 parser.add_argument(
-    "--session_id", help="session ID", dest="session_id", default="123456"
+    "--session-id", help="session ID", dest="session_id", default="123456"
 )
 parser.add_argument(
-    "--stream_log", help="stream log", dest="stream_log", action="store_true"
+    "--stream-log", help="stream log", dest="stream_log", action="store_true"
 )
-parser.add_argument("--log_level", help="log level", dest="log_level", default="info")
+parser.add_argument("--log-level", help="log level", dest="log_level", default="info")
 parser.add_argument(
-    "--sse_message",
+    "--sse-message",
     help="post-run SSE message to send to session",
     dest="sse_message",
     default=None,
 )
 parser.add_argument(
-    "--child_flows",
+    "--child-flows",
     nargs="*",
     action="store",
     help="child flows. Any number of <flow_name>=<file path> args.",
@@ -115,7 +115,7 @@ async def invoke_flow() -> FlowDefinition | None:
         print(flow_definition.model_dump_json(indent=2))
         return
 
-    result = await invoke(flow_definition)
+    result = await NodeEngineClient().invoke(flow_definition)
 
     # Check for error.
     if result.status.error:
@@ -134,7 +134,7 @@ async def invoke_flow() -> FlowDefinition | None:
     return result
 
 
-async def log_handler(event: SSEMessage, connection_id: str) -> None:
+async def log_handler(event: FlowEvent, connection_id: str) -> None:
     data = json.loads(event.data)
 
     # This avoids having the message being evaluated as python code.

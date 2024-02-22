@@ -7,7 +7,7 @@ from datetime import datetime
 from node_engine.libs.azure_openai_chat_completion import AzureOpenAIChatCompletion
 from node_engine.libs.storage import Storage
 from node_engine.libs.telemetry import Timer
-from node_engine.models.node_engine_component import NodeEngineComponent
+from node_engine.libs.node_engine_component import NodeEngineComponent
 from node_engine.models.flow_step import FlowStep
 
 
@@ -210,9 +210,9 @@ class GenerateResponse(NodeEngineComponent):
                 message["timestamp"] = int(time.time())
             messages.append(
                 {
-                    "role": "assistant"
-                    if message["sender"] == agent["name"]
-                    else "user",
+                    "role": (
+                        "assistant" if message["sender"] == agent["name"] else "user"
+                    ),
                     "content": "[{timestamp} - {sender}]: {content}".format(
                         timestamp=format_timestamp(message["timestamp"]),
                         sender=message["sender"],

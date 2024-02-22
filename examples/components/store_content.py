@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft. All rights reserved.
 
 from node_engine.libs.storage import Storage
-from node_engine.models.node_engine_component import NodeEngineComponent
+from node_engine.libs.node_engine_component import NodeEngineComponent
 from node_engine.models.flow_step import FlowStep
 
 

@@ -3,17 +3,19 @@
 import importlib.util
 
 from node_engine.libs.component_loaders.component_loader import ComponentLoader
+from node_engine.libs.node_engine_component import NodeEngineComponent
 from node_engine.models.flow_definition import FlowDefinition
-from node_engine.models.node_engine_component import NodeEngineComponent
+from node_engine.models.flow_executor import FlowExecutor
 
 
 class CodeComponentLoader:
     @staticmethod
-    async def load(
+    def load(
         flow_definition: FlowDefinition,
         component_key: str,
         code: str,
         class_name: str,
+        executor: FlowExecutor,
         tunnel_authorization: str | None = None,
     ) -> NodeEngineComponent:
         # convert code to module
@@ -26,5 +28,10 @@ class CodeComponentLoader:
         exec(code, module.__dict__)
 
         return ComponentLoader.load(
-            flow_definition, component_key, module, class_name, tunnel_authorization
+            flow_definition,
+            component_key,
+            module,
+            class_name,
+            executor,
+            tunnel_authorization,
         )

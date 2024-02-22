@@ -6,12 +6,16 @@ dependencies = [
     "nicegui==1.4.12",
     "openai==1.9.0",
     "print-color==0.4.6",
+    "rich==13.7.0",
     "sse-starlette==1.8.2",
     "sseclient==0.0.27",
 ]
 
+[project.optional-dependencies]
+test = ["pytest~=8.0.1"]
+
 [project.scripts]
-node_engine_service = "node_engine.start:main"
+node-engine-service = "node_engine.start:main"
 
 [tool.isort]
 multi_line_output = 3

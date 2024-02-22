@@ -5,13 +5,10 @@ import os
 import pathlib
 import traceback
 
-import dotenv
-
 from node_engine.libs.component_loaders.component_loader import ComponentLoader
+from node_engine.libs.node_engine_component import NodeEngineComponent
 from node_engine.models.flow_definition import FlowDefinition
-from node_engine.models.node_engine_component import NodeEngineComponent
-
-dotenv.load_dotenv()
+from node_engine.models.flow_executor import FlowExecutor
 
 # get path for parent of node_engine library
 root_path = str(pathlib.Path(__file__).parent.parent.parent.parent.absolute())
@@ -19,12 +16,13 @@ root_path = str(pathlib.Path(__file__).parent.parent.parent.parent.absolute())
 
 class ModuleComponentLoader:
     @staticmethod
-    async def load(
+    def load(
         flow_definition: FlowDefinition,
         component_key: str,
         module_name: str,
         class_name: str,
         registry_root: str,
+        executor: FlowExecutor,
         tunnel_authorization: str | None = None,
     ) -> NodeEngineComponent:
         package = None
@@ -60,7 +58,12 @@ class ModuleComponentLoader:
             )
 
         return ComponentLoader.load(
-            flow_definition, component_key, module, class_name, tunnel_authorization
+            flow_definition,
+            component_key,
+            module,
+            class_name,
+            executor,
+            tunnel_authorization,
         )
 
     @staticmethod

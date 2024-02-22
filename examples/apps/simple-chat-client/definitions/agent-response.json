@@ -2,6 +2,7 @@
   "key": "agent_response",
   "session_id": "test",
   "context": {
+    "stream_log": true,
     "agent": {
       "id": "default",
       "name": "IC Chatbot",

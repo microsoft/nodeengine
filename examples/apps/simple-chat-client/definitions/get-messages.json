@@ -1,5 +1,8 @@
 {
   "key": "get_messages",
+  "context": {
+    "stream_log": true
+  },
   "flow": [
     {
       "key": "get_messages",

@@ -1,0 +1,23 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Node Engine Service",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "node_engine.start",
+      "args": [
+        "--registry-root",
+        "${input:registry_root}"
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "id": "registry_root",
+      "description": "Registry root directory",
+      "default": "examples",
+      "type": "promptString"
+    }
+  ]
+}

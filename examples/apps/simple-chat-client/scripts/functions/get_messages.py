@@ -4,7 +4,7 @@ import os
 import pathlib
 from typing import Any
 
-from node_engine.client import invoke
+from node_engine.client import NodeEngineClient
 from node_engine.models.flow_definition import FlowDefinition
 
 # set up file locations
@@ -29,7 +29,7 @@ async def get_messages(session_id: str) -> dict[str, dict[str, str]]:
         update={"session_id": session_id}
     )
 
-    result = await invoke(flow_definition=flow_definition)
+    result = await NodeEngineClient().invoke(flow_definition=flow_definition)
 
     if result.status.error:
         # throw exception

@@ -9,4 +9,4 @@ cd "$ROOT"
 ./tools/activate-venv.sh
 
 # Start Node Engine service
-node_engine_service --registry_root examples
+node-engine-service --registry-root examples

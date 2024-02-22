@@ -1,21 +1,15 @@
-# Copyright (c) Microsoft. All rights reserved.
-
-import inspect
-
 from node_engine.libs.context import Context
-from node_engine.libs.endpoint_runner import EndpointRunner
-from node_engine.libs.registry import Registry
 from node_engine.models.flow_component import FlowComponent
 from node_engine.models.flow_definition import FlowDefinition
-from node_engine.models.node_engine_component import NodeEngineComponent
 from node_engine.models.log_item import LogItem
 
 
 class DebugInspector:
     def __init__(
-        self, registry_root: str, flow_definition: FlowDefinition, error: str
+        self,
+        flow_definition: FlowDefinition,
+        error: str,
     ) -> None:
-        self.registry = Registry(registry_root)
         self.error = error
         self.flow_definition = flow_definition
         self.flow = self.flow_definition.flow
@@ -36,8 +30,6 @@ class DebugInspector:
                 self.component_key = DebugInspector.component_key_from_flow(
                     self.flow, self.component_name
                 )
-
-        self._component = None
 
     @classmethod
     def get_component_name_from_error(cls, error: str) -> str | None:
@@ -66,44 +58,3 @@ class DebugInspector:
             for entry in entries:
                 entry.message = entry.message[:truncate_messages] + "..."
         return entries
-
-    async def component(self) -> NodeEngineComponent | None:
-        if self._component is not None:
-            return self._component
-
-        if self.component_key is None:
-            return None
-
-        # Get component from registry.
-        try:
-            component = await self.registry.load_component(
-                self.component_name or "unknown",
-                self.flow_definition,
-                self.component_key,
-            )
-            self._component = component
-            return component
-        except Exception:
-            return None
-
-    async def component_source(self) -> str | None:
-        """Get component execute method code."""
-        component = await self.component()
-
-        # Get component's `execute` method source code.
-        component_execute_source = None
-        # TODO: Should we try to get component source from a file if we couldn't load the component?
-        # check if component is of type EndpointRunner.
-        # if so, get source from file.
-        if component is not None:
-            # check if instance of EndpointRunner
-            if isinstance(component, EndpointRunner):
-                code_string = await component.get_component_source()
-            else:
-                component_execute_source, start_line = inspect.getsourcelines(
-                    component.execute
-                )
-                code_string = ""
-                for i, line in enumerate(component_execute_source, start_line):
-                    code_string += f"{i}: {line}"
-            return code_string

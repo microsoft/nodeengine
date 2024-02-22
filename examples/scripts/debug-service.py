@@ -18,16 +18,18 @@ from print_color import print
 from sseclient import Event
 
 import node_engine.libs.log as log
-from node_engine.client import invoke
+from node_engine.client import NodeEngineClient, RemoteExecutor
+from node_engine.libs.debug_inspector import DebugInspector
+from node_engine.libs.endpoint_runner import EndpointRunner
+from node_engine.libs.registry import Registry
 from node_engine.models.flow_definition import FlowDefinition
 from node_engine.models.log_item import LogItem
-from examples.libs.debug_inspector import DebugInspector
-from examples.libs.sse_listener import SSEListener
+from node_engine.sse_listener import SSEListener
 
 parser = argparse.ArgumentParser(description="Debug agent")
 parser.add_argument("session_id", help="session ID")
 # Levels: DEBUG INFO WARNING ERROR CRITICAL
-parser.add_argument("--log_level", help="log level", dest="log_level", default="error")
+parser.add_argument("--log-level", help="log level", dest="log_level", default="error")
 args = parser.parse_args()
 
 log_level = log.LogLevel.from_string(args.log_level)
@@ -89,7 +91,7 @@ async def get_agent_response(log_item: LogItem) -> None:
         return
     flow_definition = FlowDefinition(**log_item.flow_definition)
 
-    debug_inspector = DebugInspector(registry_root, flow_definition, error)
+    debug_inspector = DebugInspector(flow_definition, error)
 
     say("Flow:")
     flow_string = json.dumps([c.model_dump() for c in debug_inspector.flow], indent=2)
@@ -107,8 +109,17 @@ async def get_agent_response(log_item: LogItem) -> None:
     )
     print(context_log_string, color="purple")
 
+    component = None
+    if flow_definition.status.current_component:
+        component = Registry(registry_root).load_component(
+            flow_definition.status.current_component.name,
+            flow_definition,
+            flow_definition.status.current_component.key,
+            RemoteExecutor(),
+            None,
+        )
+
     # Get component info
-    component = await debug_inspector.component()
     info = None
     component_description = None
     component_reads_from = None
@@ -141,8 +152,11 @@ async def get_agent_response(log_item: LogItem) -> None:
             print(component_sample_input, color="purple")
 
     code_string = None
-    if debug_inspector.component_name:
-        code_string = await debug_inspector.component_source()
+    if component:
+        if isinstance(component, EndpointRunner):
+            code_string = await component._source_code()
+        else:
+            code_string = component._source_code()
         say("Component execute method source:")
         print(code_string, color="purple")
 
@@ -189,7 +203,7 @@ async def get_agent_response(log_item: LogItem) -> None:
     )
 
     say("Looking over the error...")
-    result = await invoke(flow_definition=flow_definition)
+    result = await NodeEngineClient().invoke(flow_definition=flow_definition)
 
     if log_level == log.DEBUG:
         try:
