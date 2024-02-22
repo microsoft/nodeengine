@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft. All rights reserved.
+
 import contextlib
 import json
 import os

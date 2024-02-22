@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft. All rights reserved.
+
 from node_engine.libs.context import Context
 from node_engine.models.flow_component import FlowComponent
 from node_engine.models.flow_definition import FlowDefinition

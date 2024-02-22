@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft. All rights reserved.
+
 from typing import Protocol
 
 from node_engine.models.flow_definition import FlowDefinition
