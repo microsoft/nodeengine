@@ -13,23 +13,23 @@ from typing import NoReturn
 import sseclient
 from print_color import print
 
-from node_engine.client import invoke
+from node_engine.client import NodeEngineClient
 from node_engine.models.flow_definition import FlowDefinition
 
 parser = argparse.ArgumentParser(description="Chat client")
 parser.add_argument("user_name", help="user name")
 parser.add_argument("session_id", help="session ID")
 parser.add_argument(
-    "--tunnel_authorization", help="tunnel authorization", dest="tunnel_authorization"
+    "--tunnel-authorization", help="tunnel authorization", dest="tunnel_authorization"
 )
 parser.add_argument(
-    "--log_level", help="log level", dest="log_level", default="warning"
+    "--log-level", help="log level", dest="log_level", default="warning"
 )
 parser.add_argument(
-    "--stream_log", help="stream log", dest="stream_log", action="store_true"
+    "--stream-log", help="stream log", dest="stream_log", action="store_true"
 )
 parser.add_argument(
-    "--chat_definition", help="chat definition file name", dest="chat_definition"
+    "--chat-definition", help="chat definition file name", dest="chat_definition"
 )
 args = parser.parse_args()
 
@@ -152,7 +152,7 @@ async def chat_client() -> None:
             }
         )
 
-        result = await invoke(
+        result = await NodeEngineClient().invoke(
             flow_definition=flow_definition,
             tunnel_authorization=args.tunnel_authorization,
         )

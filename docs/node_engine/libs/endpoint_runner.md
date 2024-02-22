@@ -8,7 +8,7 @@ The `endpoint_runner.py` in the libs directory offers the `EndpointRunner` class
 
 - **Execution**: Through the `execute` asynchronous method, the class manages the remote component execution workflow, handling the request and response processing.
 
-- **Getting Component Source**: Additionally, the `get_component_source` method retrieves the source code for the remotely hosted component, aiding in debugging and verification of remote execution.
+- **Getting Component Source**: Additionally, the `_source_code` method retrieves the source code for the remotely hosted component, aiding in debugging and verification of remote execution.
 
 - **Error Handling**: Implements robust error handling for cases where the remote invocation fails or returns an unexpected response.
 

@@ -25,7 +25,7 @@ Example:
     touch myapp1/registry.json
 
     # Start service using "myapp1" component registry
-    node_engine_service --registry_root myapp1
+    node-engine-service --registry-root myapp1
 
 When looking for `registry.json`, Node Engine service starts by looking in `registry_root` directory, searching up the directory tree until it finds a `registry.json` file. Each `registry.json` found is merged with the previous one, with the first one found taking precedence. This allows you to have a base `registry.json` file and then override it with a custom `registry.json` file in an app directory. The default `registry.json` file in the node_engine directory is merged last.
 
@@ -62,9 +62,9 @@ The notebook workflow above is not required (though may be helpful and good prac
 
 This is good for debugging test scripts (non-service code)
 
-- Insert `-m debugpy --listen 5678 --wait-for-client` between `python3` and the script to call. For example if your script is `examples/scripts/test-simple-chat.py "my-session-1" "ok, thanks!"`
+- Insert `-m debugpy --listen 5678 --wait-for-client` between `python3` and the script to call. For example if your script is `examples/scripts/test-chat-client.py "my-name" "<session-id>"`
 
-      python3 -m debugpy --listen 5678 --wait-for-client examples/scripts/test-simple-chat.py "my-session-1" "ok, thanks!"
+      python3 -m debugpy --listen 5678 --wait-for-client examples/scripts/test-chat-client.py "my-name" "<session-id>"
 
 - Attach to the process via VS Code (Shift+Ctrl+D and choose 'Attach').
 
@@ -73,7 +73,7 @@ This is good for debugging test scripts (non-service code)
 We created an agent to help you debug your flows and components. You can run it
 in a terminal with:
 
-    python3 examples/scripts/debug-service.py <session_id>
+    python3 examples/scripts/debug-service.py <session-id>
 
 The debug agent will connect to the Node Engine Service and listen to any logs
 emitted via SSE for the given session. It will attempt to debug any error

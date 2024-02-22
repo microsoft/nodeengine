@@ -11,7 +11,7 @@ from . import service
 
 def main():
     parser = argparse.ArgumentParser(
-        prog="node_engine_service",
+        prog="node-engine-service",
         description="Node Engine Service",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
@@ -26,7 +26,7 @@ def main():
         "--port", dest="port", type=int, default=8000, help="port to run service on"
     )
     parser.add_argument(
-        "--registry_root",
+        "--registry-root",
         dest="registry_root",
         type=str,
         default=".",
@@ -47,6 +47,9 @@ def main():
 
     app = FastAPI()
     service.init(app, registry_root)
+
+    print(f"Starting node_engine service on {host}:{port}...")
+    print(f"- Registry root: {registry_root}")
 
     uvicorn.run(app, host=host, port=port)
 

@@ -5,13 +5,10 @@ import os
 import pathlib
 import traceback
 
-import dotenv
-
 from node_engine.libs.component_loaders.component_loader import ComponentLoader
+from node_engine.libs.node_engine_component import NodeEngineComponent
 from node_engine.models.flow_definition import FlowDefinition
-from node_engine.models.node_engine_component import NodeEngineComponent
-
-dotenv.load_dotenv()
+from node_engine.models.flow_executor import FlowExecutor
 
 # get path for parent of node_engine library
 root_path = str(pathlib.Path(__file__).parent.parent.parent.parent.absolute())
@@ -19,14 +16,35 @@ root_path = str(pathlib.Path(__file__).parent.parent.parent.parent.absolute())
 
 class ModuleComponentLoader:
     @staticmethod
-    async def load(
+    def load(
         flow_definition: FlowDefinition,
         component_key: str,
         module_name: str,
         class_name: str,
         registry_root: str,
+        executor: FlowExecutor,
         tunnel_authorization: str | None = None,
     ) -> NodeEngineComponent:
+        try:
+            module = importlib.import_module(module_name)
+
+            return ComponentLoader.load(
+                flow_definition,
+                component_key,
+                module,
+                class_name,
+                executor,
+                tunnel_authorization,
+            )
+        except ModuleNotFoundError as e:
+            if e.name != module_name:
+                stacktrace = traceback.format_exc()
+                raise Exception(
+                    f"Error importing module '{module_name}': {e}. {stacktrace}"
+                )
+
+            pass
+
         package = None
 
         # check if module exists in local files or any parent directories
@@ -45,7 +63,7 @@ class ModuleComponentLoader:
                 package = ".".join(relative_path.parts + ("components",))
                 break
             # check if at root
-            if current_path == root_path:
+            if len(current_path) <= len(root_path):
                 break
             # go up one level
             current_path = os.path.dirname(current_path)
@@ -60,7 +78,12 @@ class ModuleComponentLoader:
             )
 
         return ComponentLoader.load(
-            flow_definition, component_key, module, class_name, tunnel_authorization
+            flow_definition,
+            component_key,
+            module,
+            class_name,
+            executor,
+            tunnel_authorization,
         )
 
     @staticmethod

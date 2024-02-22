@@ -1,10 +1,9 @@
 # Copyright (c) Microsoft. All rights reserved.
 
-from node_engine.models.node_engine_component import NodeEngineComponent
-from node_engine.client import invoke
+from node_engine.libs.node_engine_component import NodeEngineComponent
+from node_engine.libs.utility import eval_template, eval_templates_in_dict
 from node_engine.models.flow_definition import FlowDefinition
 from node_engine.models.flow_step import FlowStep
-from node_engine.libs.utility import eval_template, eval_templates_in_dict
 
 
 class InvokeFlow(NodeEngineComponent):
@@ -68,14 +67,15 @@ class InvokeFlow(NodeEngineComponent):
         # The flow definition that is to be invoked needs to be specified
         # either as a dict or as a template that resolves to a dict.
         if isinstance(flow_definition, str):
-            ## If the flow definition is a template, replace it with values from the context.
+            # If the flow definition is a template, replace it with values from the context.
             if "{{" in flow_definition:
                 flow_definition = eval_template(
                     flow_definition, self.flow_definition.context
                 )
                 if not isinstance(flow_definition, dict):
                     return self.exit_flow_with_error(
-                        f"invalid config, 'definition' template variable does not resolve to a dict. input={self.config.get('definition')}"
+                        "invalid config, 'definition' template variable does not resolve to a dict."
+                        f"input={self.config.get('definition')}"
                     )
             else:
                 return self.exit_flow_with_error(
@@ -129,7 +129,7 @@ class InvokeFlow(NodeEngineComponent):
 
         # Execute the new flow.
         self.log.info(f"Invoking flow. key: {flow_definition.key}.")
-        flow_result = await invoke(flow_definition)
+        flow_result = await self.runtime.invoke(flow_definition)
 
         # Pass child flow's status and context back to parent.
         self.flow_definition.status = flow_result.status

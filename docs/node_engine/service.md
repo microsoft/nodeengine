@@ -1,36 +1,39 @@
-
 # Node Engine - Service
 
 ## Endpoints:
 
-1. **/invoke**: 
-    - Method: POST
-    - Function: Invokes a flow based on a provided flow definition.
-    - Inputs: `FlowDefinition` object and `Request`.
-    - Outputs: Updated `FlowDefinition` with the results of the invoked flow.
+1. **/invoke**:
 
-2. **/invoke_component**: 
-    - Method: POST
-    - Function: Invokes a single component within a flow.
-    - Inputs: `component_key` (string), `FlowDefinition` object, and `Request`.
-    - Outputs: A `FlowStep` object with the result of the invoked component.
+   - Method: POST
+   - Function: Invokes a flow based on a provided flow definition.
+   - Inputs: `FlowDefinition` object and `Request`.
+   - Outputs: Updated `FlowDefinition` with the results of the invoked flow.
 
-3. **/registry**: 
-    - Method: GET
-    - Function: Lists all components in the registry.
-    - Outputs: List of dictionaries with key, label, description, and type of each component.
+2. **/invoke_component**:
 
-4. **/sse**: 
-    - Method: GET
-    - Function: Subscribes to server-sent events based on `session_id` and optionally `connection_id`.
-    - Inputs: `Request`, `session_id` (string), `connection_id` (string, optional).
-    - Outputs: `EventSourceResponse` with SSE messages.
+   - Method: POST
+   - Function: Invokes a single component within a flow.
+   - Inputs: `component_key` (string), `FlowDefinition` object, and `Request`.
+   - Outputs: A `FlowStep` object with the result of the invoked component.
 
-5. **/emit_sse_message**: 
-    - Method: POST
-    - Function: Emits an SSE message for subscribed clients.
-    - Inputs: `SSEMessage` object.
-    - Outputs: Status of the message emission.
+3. **/registry**:
+
+   - Method: GET
+   - Function: Lists all components in the registry.
+   - Outputs: List of dictionaries with key, label, description, and type of each component.
+
+4. **/sse**:
+
+   - Method: GET
+   - Function: Subscribes to server-sent events based on `session_id` and optionally `connection_id`.
+   - Inputs: `Request`, `session_id` (string), `connection_id` (string, optional).
+   - Outputs: `EventSourceResponse` with SSE messages.
+
+5. **/emit_sse_message**:
+   - Method: POST
+   - Function: Emits an SSE message for subscribed clients.
+   - Inputs: `SSEMessage` object.
+   - Outputs: Status of the message emission.
 
 ## Usage Examples:
 
@@ -54,9 +57,10 @@ The 'service.py' file integrates the Node Engine within a FastAPI application, e
 
 - **Event Stream**: The event_stream generator handles SSE message delivery and client disconnections within the `/sse` subscription.
 
-- **Runtime**: The `Runtime` class manages flow invocations, component executions, and SSE message emissions.
+- **Runtime**: The `Runtime` class manages flow invocations, component executions, and event emissions.
 
 - **Error Handling**: Exception handling is included to manage errors during flow or component invocation, ensuring the flow can exit cleanly with error details.
 
 # Node Engine: service.py
+
 This file is central to the operational capabilities of the Node Engine, and it should be structured and maintained to ensure robust, scalable, and flexible service interactions.

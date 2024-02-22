@@ -1,5 +1,8 @@
 {
   "key": "user_input",
+  "context": {
+    "stream_log": true
+  },
   "flow": [
     {
       "key": "store_input",

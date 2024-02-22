@@ -64,7 +64,7 @@ The steps below assume your dev environment has Python 3.10.11+ or 3.11+ install
 
 It's highly recommended to develop with Node Engine using python virtual environments, with all the benefits that come. See https://docs.python.org/3/library/venv.html for details.
 
-## Install Node Engine dependencies
+## Install Node Engine and dependencies
 
 These steps will set up all of the prerequisites for running the Node Engine
 service locally, along with anything needed for the example scripts and notebooks.
@@ -114,7 +114,7 @@ the following commands from the root of the project:
 
       # alternative with VS Code debugger:
       #    Shift+Ctrl+D and choose 'Node Engine Service'
-      node_engine_service --registry_root examples
+      node-engine-service --registry-root examples
 
 # Quick Tests
 
@@ -131,7 +131,7 @@ the following commands from the root of the project:
 
 - Call the Node Engine service with a sample flow definition:
 
-      python3 examples/scripts/invoke-flow.py examples/definitions/simple-continuation-chat.json --session_id sid123 --log_level debug --stream_log
+      python3 examples/scripts/invoke-flow.py examples/definitions/simple-continuation-chat.json --session-id sid123 --log-level debug --stream-log
 
 - You should see a sample JSON output on screen, without errors, and a context containing "Hello World".
 
@@ -161,7 +161,7 @@ Example:
 - Open a new console, activate the python virtual environment
 - Run this command passing a session ID of your choice:
 
-      python3 examples/scripts/invoke-flow.py examples/definitions/simple-cognition.json --session_id sid123 --log_level debug --stream_log
+      python3 examples/scripts/invoke-flow.py examples/definitions/simple-cognition.json --session-id sid123 --log-level debug --stream-log
 
 ## Simple Chat client
 
@@ -177,7 +177,7 @@ Example:
 - Open a new console, activate the python virtual environment
 - Run this command passing the correct session ID:
 
-      python3 examples/scripts/debug-service.py --log_level debug sid123
+      python3 examples/scripts/debug-service.py --log-level debug sid123
 
 - Interact with the chat app and observe logs coming through in the console.
 

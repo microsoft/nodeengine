@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+# Copyright (c) Microsoft. All rights reserved.
+
 # invoke this script in the current shell using `source .activate-venv.sh` (from any folder)
 
 # Change current dir to repo root

@@ -18,6 +18,8 @@ def load_azureopenai_config(environment_variable: str) -> dict:
     load_dotenv()
     # load env var, split key value pairs on comma, and then split each pair on pipe
     config = os.getenv(environment_variable)
+    if "|" in environment_variable:
+        config = environment_variable
     if not config:
         raise Exception(f"missing environment variable {environment_variable}")
 
@@ -33,11 +35,17 @@ def load_azureopenai_config(environment_variable: str) -> dict:
 
 
 def exit_flow_with_error(
-    message: str, flow_definition: FlowDefinition, log=None
+    message: str,
+    flow_definition: FlowDefinition,
+    log=None,
+    debug_information: dict | None = None,
 ) -> FlowStep:
     context = Context(flow_definition)
     context.set("error", message)
     flow_definition.status.error = message
+
+    if debug_information:
+        context.set("debug_information", debug_information)
 
     if log:
         log.error(message)

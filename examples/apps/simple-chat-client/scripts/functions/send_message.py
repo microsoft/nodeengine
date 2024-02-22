@@ -4,8 +4,8 @@ import os
 import pathlib
 import time
 from typing import Any
+from node_engine.client import NodeEngineClient
 
-from node_engine.client import invoke
 from node_engine.models.flow_definition import FlowDefinition
 
 # set up file locations
@@ -42,7 +42,7 @@ async def send_message(message, session_id, user_name) -> None:
         }
     )
 
-    result = await invoke(flow_definition)
+    result = await NodeEngineClient().invoke(flow_definition)
 
     if result.status.error:
         # throw exception

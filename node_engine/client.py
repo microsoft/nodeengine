@@ -1,13 +1,15 @@
 # Copyright (c) Microsoft. All rights reserved.
 
-from urllib.parse import urlparse
+import urllib.parse
+
 import httpx
+import pydantic
 
 from node_engine.models.flow_definition import FlowDefinition
+from node_engine.models.flow_event import FlowEvent
 from node_engine.models.flow_status import FlowStatus
 from node_engine.models.flow_step import FlowStep
 
-# Replace this URL with your actual FastAPI server address.
 default_endpoint = "http://localhost:8000"
 invoke_path = "/invoke"
 invoke_component_path = "/invoke_component"
@@ -18,11 +20,11 @@ emit_sse_message_path = "/emit_sse_message"
 # New approach is to use the NodeEngineClient class to interact with the Node Engine.
 # Old approach is to use the invoke, invoke_component, and emit functions, but this is deprecated.
 class NodeEngineClient:
-    def __init__(self, service_endpoint: str) -> None:
+    def __init__(self, service_endpoint: str = default_endpoint) -> None:
         self.service_endpoint = service_endpoint
 
     def validate_url(self, url):
-        parsed_url = urlparse(url)
+        parsed_url = urllib.parse.urlparse(url)
 
         # Check if the hostname or IP address is valid. Note: we trust "localhost" for simplicity
         # but the resolved IP should be validated for a more thorough check.
@@ -41,23 +43,22 @@ class NodeEngineClient:
     ) -> FlowDefinition:
         self.validate_url(self.service_endpoint)
         async with httpx.AsyncClient() as client:
+            headers = None
             if tunnel_authorization is not None:
                 headers = {"X-Tunnel-Authorization": tunnel_authorization}
-            else:
-                headers = None
 
             invoke_url = f"{self.service_endpoint}{invoke_path}"
 
             response = await client.post(
                 invoke_url,
-                json=flow_definition.model_dump(),
+                json=flow_definition.model_dump(mode="json"),
                 headers=headers,
                 timeout=None,
             )
 
         try:
-            return_flow_definition = FlowDefinition(**response.json())
-        except Exception as e:
+            return_flow_definition = FlowDefinition.model_validate(response.json())
+        except pydantic.ValidationError as e:
             error = f"{str(e)}. Response: {response}"
             return_flow_definition = FlowDefinition(
                 key=flow_definition.key,
@@ -76,10 +77,9 @@ class NodeEngineClient:
     ) -> FlowStep:
         self.validate_url(self.service_endpoint)
         async with httpx.AsyncClient() as client:
+            headers = None
             if tunnel_authorization:
                 headers = {"X-Tunnel-Authorization": tunnel_authorization}
-            else:
-                headers = None
 
             invoke_component_url = f"{self.service_endpoint}{invoke_component_path}"
 
@@ -96,43 +96,43 @@ class NodeEngineClient:
             next=response_json["next"],
         )
 
-    async def emit(self, session_id, event, data) -> httpx.Response:
-        self.validate_url(self.service_endpoint)
+    async def emit(
+        self, event: FlowEvent, connection_id: str | None = None
+    ) -> httpx.Response:
         async with httpx.AsyncClient() as client:
             emit_sse_message_url = f"{self.service_endpoint}{emit_sse_message_path}"
+            if connection_id is not None:
+                emit_sse_message_url += (
+                    f"?connection_id={urllib.parse.quote(connection_id)}"
+                )
             response = await client.post(
                 emit_sse_message_url,
-                json={"session_id": session_id, "event": event, "data": data},
+                json=event.model_dump(mode="json"),
                 timeout=None,
             )
 
         return response
 
 
-# Below is the old approach to interacting with the Node Engine.
-# This is deprecated, please migrate to using the NodeEngineClient class instead.
-# This version may be removed in the future.
+class RemoteExecutor:
 
+    def __init__(self, service_endpoint: str = default_endpoint) -> None:
+        self.client = NodeEngineClient(service_endpoint)
 
-async def invoke(
-    flow_definition: FlowDefinition,
-    tunnel_authorization: str | None = None,
-) -> FlowDefinition:
-    client = NodeEngineClient(default_endpoint)
-    return await client.invoke(flow_definition, tunnel_authorization)
+    async def invoke(
+        self, flow_definition: FlowDefinition, tunnel_authorization: str | None = None
+    ) -> FlowDefinition:
+        return await self.client.invoke(flow_definition, tunnel_authorization)
 
+    async def invoke_component(
+        self,
+        flow_definition: FlowDefinition,
+        component_key: str,
+        tunnel_authorization: str | None = None,
+    ) -> FlowStep:
+        return await self.client.invoke_component(
+            flow_definition, component_key, tunnel_authorization
+        )
 
-async def invoke_component(
-    flow_definition: FlowDefinition,
-    component_key: str,
-    tunnel_authorization: str | None = None,
-) -> FlowStep:
-    client = NodeEngineClient(default_endpoint)
-    return await client.invoke_component(
-        flow_definition, component_key, tunnel_authorization
-    )
-
-
-async def emit(session_id, event, data) -> httpx.Response:
-    client = NodeEngineClient(default_endpoint)
-    return await client.emit(session_id, event, data)
+    async def emit(self, event: FlowEvent, connection_id: str | None = None) -> None:
+        await self.client.emit(event, connection_id=connection_id)

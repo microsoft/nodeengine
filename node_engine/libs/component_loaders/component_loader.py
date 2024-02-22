@@ -3,7 +3,8 @@
 from types import ModuleType
 
 from node_engine.models.flow_definition import FlowDefinition
-from node_engine.models.node_engine_component import NodeEngineComponent
+from node_engine.libs.node_engine_component import NodeEngineComponent
+from node_engine.models.flow_executor import FlowExecutor
 
 
 class ComponentLoader:
@@ -13,6 +14,7 @@ class ComponentLoader:
         component_key: str,
         module: ModuleType,
         class_name: str,
+        executor: FlowExecutor,
         tunnel_authorization: str | None = None,
     ) -> NodeEngineComponent:
         component_attribute = getattr(module, class_name)
@@ -21,7 +23,7 @@ class ComponentLoader:
 
         try:
             component = component_attribute(
-                flow_definition, component_key, tunnel_authorization
+                flow_definition, component_key, executor, tunnel_authorization
             )
         except Exception as exception:
             raise Exception(

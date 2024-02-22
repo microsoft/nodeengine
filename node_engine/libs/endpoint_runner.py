@@ -3,9 +3,10 @@
 from urllib.parse import urlencode, urljoin, urlparse
 
 import httpx
+from node_engine.client import RemoteExecutor
 
 from node_engine.models.flow_definition import FlowDefinition
-from node_engine.models.node_engine_component import NodeEngineComponent
+from node_engine.libs.node_engine_component import NodeEngineComponent
 from node_engine.models.flow_step import FlowStep
 
 
@@ -19,7 +20,7 @@ class EndpointRunner(NodeEngineComponent):
         class_name,
         tunnel_authorization=None,
     ) -> None:
-        super().__init__(flow_definition, config)
+        super().__init__(flow_definition, config, executor=RemoteExecutor(endpoint))
         self.endpoint = endpoint
         self.component_name = component_name
         self.class_name = class_name
@@ -82,7 +83,7 @@ class EndpointRunner(NodeEngineComponent):
 
         return self.continue_flow(next, updated_flow_definition)
 
-    async def get_component_source(self) -> str:
+    async def _source_code(self) -> str:
         async with httpx.AsyncClient() as client:
             if self.tunnel_authorization:
                 headers = {

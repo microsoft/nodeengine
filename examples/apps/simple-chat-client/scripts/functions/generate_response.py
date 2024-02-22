@@ -6,7 +6,7 @@ from typing import Any
 
 from print_color import print
 
-from node_engine.client import invoke
+from node_engine.client import NodeEngineClient
 from node_engine.models.flow_definition import FlowDefinition
 
 # set up file locations
@@ -32,7 +32,7 @@ async def generate_response(session_id: str) -> None:
         update={"session_id": session_id}
     )
 
-    result = await invoke(flow_definition)
+    result = await NodeEngineClient().invoke(flow_definition)
 
     if result.status.error:
         print(result.status.error, tag="error", tag_color="red")

@@ -1,13 +1,13 @@
 # Copyright (c) Microsoft. All rights reserved.
 
 from node_engine.libs.endpoint_runner import EndpointRunner
+from node_engine.libs.node_engine_component import NodeEngineComponent
 from node_engine.models.flow_definition import FlowDefinition
-from node_engine.models.node_engine_component import NodeEngineComponent
 
 
 class EndpointComponentLoader:
     @staticmethod
-    async def load(
+    def load(
         flow_definition: FlowDefinition,
         component_key: str,
         endpoint: str,

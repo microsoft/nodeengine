@@ -7,7 +7,7 @@ import uuid
 from nicegui import Client, app, ui
 from print_color import print
 
-from examples.libs.sse_listener import SSEListener
+from node_engine.sse_listener import SSEListener
 
 from .. import theme
 from ..functions.generate_response import generate_response
