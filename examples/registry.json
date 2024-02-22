@@ -5,7 +5,7 @@
     "description": "Run a flow in the background",
     "type": "module",
     "config": {
-      "module": "background_process",
+      "module": "examples.components.background_process",
       "class": "BackgroundProcess"
     }
   },
@@ -15,7 +15,7 @@
     "description": "Generate a response from the debug agent",
     "type": "module",
     "config": {
-      "module": "debug_agent_response",
+      "module": "examples.components.debug_agent_response",
       "class": "DebugAgentResponse"
     }
   },
@@ -25,7 +25,7 @@
     "description": "Emits events to the connected clients for the current session",
     "type": "module",
     "config": {
-      "module": "emit_events",
+      "module": "examples.components.emit_events",
       "class": "EmitEvents"
     }
   },
@@ -35,7 +35,7 @@
     "description": "Score the input using provided criteria.",
     "type": "module",
     "config": {
-      "module": "evaluate_score",
+      "module": "examples.components.evaluate_score",
       "class": "EvaluateScore"
     }
   },
@@ -45,7 +45,7 @@
     "description": "Determines if the flow should continue",
     "type": "module",
     "config": {
-      "module": "evaluate_continue",
+      "module": "examples.components.evaluate_continue",
       "class": "EvaluateContinue"
     }
   },
@@ -55,7 +55,7 @@
     "description": "Run a set of tests of a flow as an experiment.",
     "type": "module",
     "config": {
-      "module": "experiment",
+      "module": "examples.components.experiment",
       "class": "Experiment"
     }
   },
@@ -65,7 +65,7 @@
     "description": "Extracts embeddings from the input",
     "type": "module",
     "config": {
-      "module": "extract_embeddings",
+      "module": "examples.components.extract_embeddings",
       "class": "ExtractEmbeddings"
     }
   },
@@ -75,7 +75,7 @@
     "description": "Extracts memories from recent messages",
     "type": "module",
     "config": {
-      "module": "extract_memories",
+      "module": "examples.components.extract_memories",
       "class": "ExtractMemories"
     }
   },
@@ -85,7 +85,7 @@
     "description": "Generates a response based on the history, memories and intent",
     "type": "module",
     "config": {
-      "module": "generate_response",
+      "module": "examples.components.generate_response",
       "class": "GenerateResponse"
     }
   },
@@ -95,7 +95,7 @@
     "description": "Generates a whiteboard for a conversation",
     "type": "module",
     "config": {
-      "module": "generate_whiteboard",
+      "module": "examples.components.generate_whiteboard",
       "class": "GenerateWhiteboard"
     }
   },
@@ -105,7 +105,7 @@
     "description": "Extracts the intent from recent messages",
     "type": "module",
     "config": {
-      "module": "intent_extraction",
+      "module": "examples.components.intent_extraction",
       "class": "IntentExtraction"
     }
   },
@@ -115,7 +115,7 @@
     "description": "Load and invoke a flow (a.k.a., a child flow).",
     "type": "module",
     "config": {
-      "module": "invoke_flow",
+      "module": "examples.components.invoke_flow",
       "class": "InvokeFlow"
     }
   },
@@ -125,7 +125,7 @@
     "description": "Jumps to the specified component in the flow",
     "type": "module",
     "config": {
-      "module": "next_component",
+      "module": "examples.components.next_component",
       "class": "NextComponent"
     }
   },
@@ -135,7 +135,7 @@
     "description": "Processes memories from recent messages via background processing",
     "type": "module",
     "config": {
-      "module": "process_memories",
+      "module": "examples.components.process_memories",
       "class": "ProcessMemories"
     }
   },
@@ -145,7 +145,7 @@
     "description": "A component to help create repetition loops.",
     "type": "module",
     "config": {
-      "module": "repeat",
+      "module": "examples.components.repeat",
       "class": "Repeat"
     }
   },
@@ -155,7 +155,7 @@
     "description": "Retrieves content from persistent storage",
     "type": "module",
     "config": {
-      "module": "retrieve_content",
+      "module": "examples.components.retrieve_content",
       "class": "RetrieveContent"
     }
   },
@@ -165,7 +165,7 @@
     "description": "Stores content in persistent storage",
     "type": "module",
     "config": {
-      "module": "store_content",
+      "module": "examples.components.store_content",
       "class": "StoreContent"
     }
   },

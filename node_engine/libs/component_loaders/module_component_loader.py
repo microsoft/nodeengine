@@ -25,6 +25,20 @@ class ModuleComponentLoader:
         executor: FlowExecutor,
         tunnel_authorization: str | None = None,
     ) -> NodeEngineComponent:
+        try:
+            module = importlib.import_module(module_name)
+
+            return ComponentLoader.load(
+                flow_definition,
+                component_key,
+                module,
+                class_name,
+                executor,
+                tunnel_authorization,
+            )
+        except ModuleNotFoundError:
+            pass
+
         package = None
 
         # check if module exists in local files or any parent directories

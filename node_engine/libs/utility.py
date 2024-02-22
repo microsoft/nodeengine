@@ -18,6 +18,8 @@ def load_azureopenai_config(environment_variable: str) -> dict:
     load_dotenv()
     # load env var, split key value pairs on comma, and then split each pair on pipe
     config = os.getenv(environment_variable)
+    if "|" in environment_variable:
+        config = environment_variable
     if not config:
         raise Exception(f"missing environment variable {environment_variable}")
 
