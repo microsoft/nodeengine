@@ -2,13 +2,14 @@
 
 import asyncio
 import json
+from typing import Optional
 
 from openai import APIConnectionError, AsyncAzureOpenAI
 from openai.types import CreateEmbeddingResponse
 
 from node_engine.libs.utility import load_azureopenai_config
 
-api_version = "2023-05-15"
+api_version_default = "2023-05-15"
 
 
 class AzureOpenAIEmbeddings:
@@ -18,13 +19,21 @@ class AzureOpenAIEmbeddings:
         azureopenai_env_var: str,
         max_retries: int = 2,
         retry_delay_ms: int = 1000,
+        model: Optional[str] | None = None,
+        endpoint: Optional[str] | None = None,
+        api_key: Optional[str] | None = None,
+        api_version: Optional[str] | None = None,
     ) -> list[list[float]]:
         config = load_azureopenai_config(azureopenai_env_var)
-        model = config["deployment"]
+        model = model or config["deployment"]
+        endpoint = endpoint or config["endpoint"]
+        api_key = api_key or config["key"]
+        api_version = api_version or api_version_default
+
         client = AsyncAzureOpenAI(
-            azure_endpoint=config["endpoint"],
+            azure_endpoint=endpoint,
             azure_deployment=model,
-            api_key=config["key"],
+            api_key=api_key,
             api_version=api_version,
         )
 
