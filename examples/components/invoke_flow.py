@@ -1,6 +1,5 @@
 # Copyright (c) Microsoft. All rights reserved.
 
-from node_engine.client import NodeEngineClient
 from node_engine.libs.node_engine_component import NodeEngineComponent
 from node_engine.libs.utility import eval_template, eval_templates_in_dict
 from node_engine.models.flow_definition import FlowDefinition
@@ -130,7 +129,7 @@ class InvokeFlow(NodeEngineComponent):
 
         # Execute the new flow.
         self.log.info(f"Invoking flow. key: {flow_definition.key}.")
-        flow_result = await NodeEngineClient().invoke(flow_definition)
+        flow_result = await self.runtime.invoke(flow_definition)
 
         # Pass child flow's status and context back to parent.
         self.flow_definition.status = flow_result.status
