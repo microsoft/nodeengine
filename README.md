@@ -72,6 +72,12 @@ service locally, along with anything needed for the example scripts and notebook
 You need to run these steps only once. If you already installed the dependencies
 you can skip to the next section and start Node Engine service.
 
+- Enable Long File Paths on Windows
+
+      1. Press Win + R, type regedit, and press Enter to open the Registry Editor.
+      2. Navigate to HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem.
+      3. Find the LongPathsEnabled key. If it doesn’t exist, right-click on the FileSystem key, select New > DWORD (32-bit) Value, and name it LongPathsEnabled.
+      4. Double-click on LongPathsEnabled, set its value to 1, and click OK.
 - Install python 3.11
 - Create Python virtual environment:
 
