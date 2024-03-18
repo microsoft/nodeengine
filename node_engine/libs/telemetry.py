@@ -32,7 +32,7 @@ class Telemetry:
         self.component_key = component_key
 
     def telemetry_storage_key(self) -> str:
-        return f"telemetry_{self.session_id}-{self.flow_key}-{self.component_key}"
+        return f"telemetry_{self.flow_key}-{self.component_key}"
 
     async def capture(self, data) -> None:
         existing_data = (
