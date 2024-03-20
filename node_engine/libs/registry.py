@@ -2,9 +2,6 @@
 
 import json
 import os
-import pathlib
-
-from dotenv import load_dotenv
 
 from node_engine.libs.component_loaders.code_component_loader import CodeComponentLoader
 from node_engine.libs.component_loaders.endpoint_component_loader import (
@@ -18,16 +15,12 @@ from node_engine.models.component_registration import ComponentRegistration
 from node_engine.models.flow_definition import FlowDefinition
 from node_engine.models.flow_executor import FlowExecutor
 
-load_dotenv()
-
 registry_file_name = "registry.json"
-
-# get path for parent of node_engine library
-root_path = str(pathlib.Path(__file__).parent.parent.parent.absolute())
 
 
 class Registry:
     def __init__(self, root_path: str) -> None:
+        # We assume the registry file will be found at <root_path>/registry.json.
         self.root_path = root_path
 
     # Load each time needed so that changes to the registry file are reflected
@@ -41,43 +34,19 @@ class Registry:
 
             return component_definitions
 
-        # helper: merge two lists of components
-        def merge_component_definitions(
-            component_definitions: list[ComponentRegistration],
-            additional_component_definitions: list[ComponentRegistration],
-        ) -> list[ComponentRegistration]:
-            for additional_component in additional_component_definitions:
-                if additional_component.key not in [
-                    component.key for component in component_definitions
-                ]:
-                    component_definitions.append(additional_component)
-            return component_definitions
+        # Load components from registry file.
+        registry_file_path = os.path.join(self.root_path, registry_file_name)
+        if not os.path.isfile(registry_file_path):
+            return []
 
-        component_definitions = []
+        component_definitions = load_from_file(registry_file_path)
 
-        # start in local registry and check if registry file exists, otherwise walk
-        # up parent directories until root directory is reached
-        current_path = self.root_path
-        while True:
-            # check if registry file exists
-            current_path_file = os.path.join(current_path, registry_file_name)
-            if os.path.isfile(current_path_file):
-                additional_component_definitions = load_from_file(current_path_file)
-                component_definitions = merge_component_definitions(
-                    component_definitions, additional_component_definitions
-                )
-            # check if at root or below
-            if len(current_path) <= len(root_path):
-                break
-            # go up one level
-            current_path = os.path.dirname(current_path)
-
-        # sort components by key
+        # Sort components by key.
         sorted_component_definitions = sorted(
             component_definitions, key=lambda component: component.key
         )
 
-        # return sorted components
+        # Return sorted components.
         return sorted_component_definitions
 
     def load_component(
@@ -88,7 +57,7 @@ class Registry:
         executor: FlowExecutor,
         tunnel_authorization: str | None = None,
     ) -> NodeEngineComponent | None:
-        # get the component registration for the given key
+        # Get the component registration for the given key.
         component_registration = (
             next(
                 (
@@ -104,7 +73,7 @@ class Registry:
         if component_registration is None:
             return None
 
-        # load the component
+        # Load the component.
         match component_registration.type:
             case "endpoint":
                 component = EndpointComponentLoader.load(
@@ -121,7 +90,6 @@ class Registry:
                     component_key,
                     component_registration.config["module"],
                     component_registration.config["class"],
-                    self.root_path,
                     executor=executor,
                     tunnel_authorization=tunnel_authorization,
                 )
