@@ -25,7 +25,7 @@ Node Engine is designed for rapid experimentation and development of new compone
 
 Why not [Semantic Kernel | Promptflow | Autogen | LangChain | etc.]? This framework has been built from the ground up specifically for the experimentation use-case for our team and next areas of investment. Each of those frameworks have their own idiosyncrasies that work well for their use-cases, but don't allow us to run as fast as we can with this approach and the ability for us to quickly extend it to meet our not-yet-discovered needs. Learnings from this framework will be used to inform future work in Semantic Kernel and other areas.
 
-# Concepts
+## Concepts
 
 Detailed [documentation](./docs/node_engine/README.md) of Node Engine and how it works is provided.
 
@@ -56,15 +56,15 @@ When state must be provided to a component, there are a few recommended approach
 
 It is recommended to avoid storing flow-level state in the component config, as it is designed to be used for configuration and not state. Instead, update the context with the state and it will be passed to the remaining components in the flow.
 
-# Quickstart
+## Quickstart
 
-## Prerequisites
+### Prerequisites
 
 The steps below assume your dev environment has Python 3.10.11+ or 3.11+ installed and available in the console. You can execute this command to check your version: `python3 --version`.
 
 It's highly recommended to develop with Node Engine using python virtual environments, with all the benefits that come. See https://docs.python.org/3/library/venv.html for details.
 
-## Install Node Engine and dependencies
+### Install Node Engine and dependencies
 
 These steps will set up all of the prerequisites for running the Node Engine
 service locally, along with anything needed for the example scripts and notebooks.
@@ -103,7 +103,7 @@ you can skip to the next section and start Node Engine service.
 
 - Edit `.env` as needed, adding your credentials.
 
-## Start Node Engine service
+### Start Node Engine service
 
 Unless Node Engine service is already running, open a terminal console and run
 the following commands from the root of the project:
@@ -119,12 +119,12 @@ the following commands from the root of the project:
 - Start local Node Engine service. The service defaults to port 8000.
 
       # alternative with VS Code debugger:
-      #    Shift+Ctrl+D and choose 'Node Engine Service'
+      #   Shift+Ctrl+D and choose 'Node Engine Service'
       node-engine-service --registry-root examples
 
-# Quick Tests
+## Quick Tests
 
-## #1 Run sample flow from command line
+### #1 Run sample flow from command line
 
 - After starting the service, open a new console.
 - Activate the virtual environment:
@@ -141,7 +141,7 @@ the following commands from the root of the project:
 
 - You should see a sample JSON output on screen, without errors, and a context containing "Hello World".
 
-## #2 Test SSE (server side events) via Postman
+### #2 Test SSE (server side events) via Postman
 
 - Launch Postman and create a new GET request with the following url:
   - `http://127.0.0.1:8000/sse?session_id=my-session-12345&connection_id=my-connection-12345`
@@ -153,12 +153,12 @@ the following commands from the root of the project:
 
   ![Alt text](docs/quickstart.png)
 
-# Next steps
+## Next steps
 
 Once the service is running, you can run the example [scripts](../examples/scripts/)
 and [notebooks](../examples/notebooks/).
 
-## Invoke a flow from command line
+### Invoke a flow from command line
 
 This [invoke-flow.py](examples/scripts/invoke-flow.py) script loads a flow definition and send it to the service to be executed. The examples/definitions folder contains some examples.
 
@@ -169,11 +169,11 @@ Example:
 
       python3 examples/scripts/invoke-flow.py examples/definitions/simple-cognition.json --session-id sid123 --log-level debug --stream-log
 
-## Simple Chat client
+### Simple Chat client
 
 The examples folder contain a sample chat app with a custom UI to chat with OpenAI models, see the [documentation here](examples/apps/simple-chat-client/README.md) to test it. In this case you won't need to start the service because the app starts the service automatically.
 
-## Watch service logs
+### Watch service logs
 
 This [debug-service.py](examples/scripts/debug-service.py) script attaches to the service and emits log events for a specific session.
 
@@ -187,7 +187,7 @@ Example:
 
 - Interact with the chat app and observe logs coming through in the console.
 
-## Develop your apps
+### Develop your apps
 
 To experiment with developing new apps, scripts, flows and components, see the
 [Development guide](docs/DEVELOPMENT.md) for more details.
