@@ -10,9 +10,6 @@ from node_engine.libs.node_engine_component import NodeEngineComponent
 from node_engine.models.flow_definition import FlowDefinition
 from node_engine.models.flow_executor import FlowExecutor
 
-# get path for parent of node_engine library
-root_path = str(pathlib.Path(__file__).parent.parent.parent.parent.absolute())
-
 
 class ModuleComponentLoader:
     @staticmethod
@@ -45,51 +42,37 @@ class ModuleComponentLoader:
 
             pass
 
-        package = None
+        # Check if module exists as a `components` dir off of registry_root.
+        # This is the recommended way to set up Node Engine projects.
+        if os.path.isfile(
+            os.path.join(registry_root, "components", f"{module_name}.py")
+        ):
+            # Assumes the path that includes the `node_engine` dir is in the
+            # system path which is how we recommend setting up Node Engine
+            # projects.
+            path_parts = pathlib.Path(registry_root).parts[-2:] + ("components",)
+            # convert to dot notation
+            package = ".".join(path_parts)
 
-        # check if module exists in local files or any parent directories
-        # until root directory is reached
-        current_path = registry_root
-        while True:
-            # check if module exists
-            if os.path.isfile(
-                os.path.join(current_path, "components", f"{module_name}.py")
-            ):
-                # get relative path
-                relative_path = pathlib.Path(current_path).relative_to(
-                    pathlib.Path(root_path)
+            try:
+                name = f".{module_name}"
+                module = importlib.import_module(name, package)
+            except Exception as exception:
+                stacktrace = traceback.format_exc()
+                raise Exception(
+                    f"Error importing module '{module_name}': {exception}. Trace: {stacktrace}"
                 )
-                # convert to dot notation
-                package = ".".join(relative_path.parts + ("components",))
-                break
-            # check if at root
-            if len(current_path) <= len(root_path):
-                break
-            # go up one level
-            current_path = os.path.dirname(current_path)
 
-        try:
-            name = f".{module_name}"
-            module = importlib.import_module(name, package)
-        except Exception as exception:
-            stacktrace = traceback.format_exc()
-            raise Exception(
-                f"Error importing module '{module_name}': {exception}. {stacktrace}"
+            return ComponentLoader.load(
+                flow_definition,
+                component_key,
+                module,
+                class_name,
+                executor,
+                tunnel_authorization,
             )
 
-        return ComponentLoader.load(
-            flow_definition,
-            component_key,
-            module,
-            class_name,
-            executor,
-            tunnel_authorization,
+        stacktrace = traceback.format_exc()
+        raise Exception(
+            f"Module '{module_name}' not found in local file components dir: {stacktrace}"
         )
-
-    @staticmethod
-    def path_to_package(path: str) -> str:
-        # get relative path
-        relative_path = pathlib.Path(path).relative_to(pathlib.Path(root_path))
-        # convert to dot notation
-        package = ".".join(relative_path.parts + ("components",))
-        return package
