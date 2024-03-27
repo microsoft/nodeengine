@@ -3,16 +3,17 @@ name = "node-engine"
 version = "0.1.0"
 requires-python = ">=3.11,<3.12"
 dependencies = [
-    "nicegui==1.4.12",
-    "openai==1.9.0",
+    "openai>=1.9.0,<2.0.0",
     "print-color==0.4.6",
-    "rich==13.7.0",
-    "sse-starlette==1.8.2",
+    "rich>=13.7.0,<14.0.0",
+    "sse-starlette>=1.8.2,<2.0.0",
     "sseclient==0.0.27",
 ]
 
 [project.optional-dependencies]
 test = ["pytest~=8.0.1"]
+examples = ["nicegui==1.4.12"]
+all = ["node-engine[test]", "node-engine[examples]"]
 
 [project.scripts]
 node-engine-service = "node_engine.start:main"
