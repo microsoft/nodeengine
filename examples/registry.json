@@ -5,7 +5,7 @@
     "description": "Run a flow in the background",
     "type": "module",
     "config": {
-      "module": "examples.components.background_process",
+      "module": "node_engine_example_components.background_process",
       "class": "BackgroundProcess"
     }
   },
@@ -15,7 +15,7 @@
     "description": "Generate a response from the debug agent",
     "type": "module",
     "config": {
-      "module": "examples.components.debug_agent_response",
+      "module": "node_engine_example_components.debug_agent_response",
       "class": "DebugAgentResponse"
     }
   },
@@ -25,7 +25,7 @@
     "description": "Emits events to the connected clients for the current session",
     "type": "module",
     "config": {
-      "module": "examples.components.emit_events",
+      "module": "node_engine_example_components.emit_events",
       "class": "EmitEvents"
     }
   },
@@ -35,7 +35,7 @@
     "description": "Score the input using provided criteria.",
     "type": "module",
     "config": {
-      "module": "examples.components.evaluate_score",
+      "module": "node_engine_example_components.evaluate_score",
       "class": "EvaluateScore"
     }
   },
@@ -45,7 +45,7 @@
     "description": "Determines if the flow should continue",
     "type": "module",
     "config": {
-      "module": "examples.components.evaluate_continue",
+      "module": "node_engine_example_components.evaluate_continue",
       "class": "EvaluateContinue"
     }
   },
@@ -55,7 +55,7 @@
     "description": "Run a set of tests of a flow as an experiment.",
     "type": "module",
     "config": {
-      "module": "examples.components.experiment",
+      "module": "node_engine_example_components.experiment",
       "class": "Experiment"
     }
   },
@@ -65,7 +65,7 @@
     "description": "Extracts embeddings from the input",
     "type": "module",
     "config": {
-      "module": "examples.components.extract_embeddings",
+      "module": "node_engine_example_components.extract_embeddings",
       "class": "ExtractEmbeddings"
     }
   },
@@ -75,7 +75,7 @@
     "description": "Extracts memories from recent messages",
     "type": "module",
     "config": {
-      "module": "examples.components.extract_memories",
+      "module": "node_engine_example_components.extract_memories",
       "class": "ExtractMemories"
     }
   },
@@ -85,7 +85,7 @@
     "description": "Generates a response based on the history, memories and intent",
     "type": "module",
     "config": {
-      "module": "examples.components.generate_response",
+      "module": "node_engine_example_components.generate_response",
       "class": "GenerateResponse"
     }
   },
@@ -95,7 +95,7 @@
     "description": "Generates a whiteboard for a conversation",
     "type": "module",
     "config": {
-      "module": "examples.components.generate_whiteboard",
+      "module": "node_engine_example_components.generate_whiteboard",
       "class": "GenerateWhiteboard"
     }
   },
@@ -105,7 +105,7 @@
     "description": "Extracts the intent from recent messages",
     "type": "module",
     "config": {
-      "module": "examples.components.intent_extraction",
+      "module": "node_engine_example_components.intent_extraction",
       "class": "IntentExtraction"
     }
   },
@@ -115,7 +115,7 @@
     "description": "Load and invoke a flow (a.k.a., a child flow).",
     "type": "module",
     "config": {
-      "module": "examples.components.invoke_flow",
+      "module": "node_engine_example_components.invoke_flow",
       "class": "InvokeFlow"
     }
   },
@@ -125,7 +125,7 @@
     "description": "Jumps to the specified component in the flow",
     "type": "module",
     "config": {
-      "module": "examples.components.next_component",
+      "module": "node_engine_example_components.next_component",
       "class": "NextComponent"
     }
   },
@@ -135,7 +135,7 @@
     "description": "Processes memories from recent messages via background processing",
     "type": "module",
     "config": {
-      "module": "examples.components.process_memories",
+      "module": "node_engine_example_components.process_memories",
       "class": "ProcessMemories"
     }
   },
@@ -145,7 +145,7 @@
     "description": "A component to help create repetition loops.",
     "type": "module",
     "config": {
-      "module": "examples.components.repeat",
+      "module": "node_engine_example_components.repeat",
       "class": "Repeat"
     }
   },
@@ -155,7 +155,7 @@
     "description": "Retrieves content from persistent storage",
     "type": "module",
     "config": {
-      "module": "examples.components.retrieve_content",
+      "module": "node_engine_example_components.retrieve_content",
       "class": "RetrieveContent"
     }
   },
@@ -165,7 +165,7 @@
     "description": "Stores content in persistent storage",
     "type": "module",
     "config": {
-      "module": "examples.components.store_content",
+      "module": "node_engine_example_components.store_content",
       "class": "StoreContent"
     }
   },
