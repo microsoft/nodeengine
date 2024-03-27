@@ -96,7 +96,7 @@ you can skip to the next section and start Node Engine service.
 
       pip install --upgrade pip
 
-      pip install -e .\[all\]
+      pip install -e .[all]
 
 - Create `.env` configuration file:
 
