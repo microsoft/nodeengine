@@ -78,6 +78,7 @@ you can skip to the next section and start Node Engine service.
       2. Navigate to HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem.
       3. Find the LongPathsEnabled key. If it doesn’t exist, right-click on the FileSystem key, select New > DWORD (32-bit) Value, and name it LongPathsEnabled.
       4. Double-click on LongPathsEnabled, set its value to 1, and click OK.
+
 - Install python 3.11
 - Create Python virtual environment:
 
@@ -95,7 +96,7 @@ you can skip to the next section and start Node Engine service.
 
       pip install --upgrade pip
 
-      pip install -e .
+      pip install -e .\[all\]
 
 - Create `.env` configuration file:
 
