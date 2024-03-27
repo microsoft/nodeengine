@@ -28,7 +28,6 @@ profile = "black"
 [tool.pyright]
 include = ["node_engine", "examples"]
 
-[tool.setuptools.packages.find]
-include = ["node_engine", "node_engine.*"]
-exclude = ["node_engine.tests*", "node_engine.*.tests*"]
-namespaces = false                                       # to disable scanning PEP 420 namespaces (true by default)
+[tool.setuptools.package-dir]
+node_engine = "node_engine"
+node_engine_example_components = "examples/components"
