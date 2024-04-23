@@ -1,12 +1,23 @@
 # Copyright (c) Microsoft. All rights reserved.
 
 import argparse
+import logging
 import os
 
 import uvicorn
 from fastapi import FastAPI
 
+from node_engine.libs.logging import console_log_handler
+
 from . import service
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(name)35s | %(message)s",
+    handlers=[console_log_handler.new()],
+)
+
+logger = logging.getLogger(__name__)
 
 
 def main():
@@ -29,7 +40,7 @@ def main():
         "--registry-root",
         dest="registry_root",
         type=str,
-        default=".",
+        default="./examples",
         help="root directory for registry and component discovery",
     )
     args = parser.parse_args()
@@ -48,10 +59,15 @@ def main():
     app = FastAPI()
     service.init(app, registry_root)
 
-    print(f"Starting node_engine service on {host}:{port}...")
-    print(f"- Registry root: {registry_root}")
+    logger.info("Starting node_engine service on %s:%s...", host, port)
+    logger.info("Registry root: %s", registry_root)
 
-    uvicorn.run(app, host=host, port=port)
+    uvicorn.run(
+        app,
+        host=host,
+        port=port,
+        log_config={"version": 1, "disable_existing_loggers": False},
+    )
 
 
 if __name__ == "__main__":

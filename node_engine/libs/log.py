@@ -1,12 +1,11 @@
 # Copyright (c) Microsoft. All rights reserved.
 
 import logging
+import logging.handlers
 from enum import IntEnum, unique
 from typing import Any
-from node_engine.libs.logging import console_log_handler
-from node_engine.libs.logging.event_logger_handler import EventLoggerHandler
 
-from node_engine.libs.logging.status_logger_handler import StatusLoggerHandler
+from node_engine.libs.logging.flow_log_handler import FlowLogHandler
 from node_engine.models.flow_definition import FlowDefinition
 from node_engine.models.flow_executor import FlowExecutor
 
@@ -34,28 +33,89 @@ class LogLevel(IntEnum):
         return set_level <= level
 
 
-class Log(logging.Logger):
+flow_logger = logging.getLogger("node_engine.flow")
+
+
+class FlowLoggerAdapter(logging.LoggerAdapter):
+    """Logger adapter that adds flow information to log messages."""
+
     def __init__(
         self,
-        namespace: str,
+        logger: Any,
         flow_definition: FlowDefinition,
         executor: FlowExecutor,
-        level=LogLevel.DEBUG,
-    ):
-        super().__init__(namespace, level.value)
-        self.addHandler(StatusLoggerHandler(namespace, flow_definition))
-        self.addHandler(
-            EventLoggerHandler(namespace, flow_definition, executor=executor)
+        component_label: str,
+    ) -> None:
+        super().__init__(logger)
+        self._flow_definition = flow_definition
+        self._executor = executor
+        self._component_label = component_label
+
+    def process(self, msg, kwargs):
+        if self._component_label:
+            return (
+                "s:%s | f:%s | c:%s | %s"
+                % (
+                    self._flow_definition.session_id,
+                    self._flow_definition.key,
+                    self._component_label,
+                    msg,
+                ),
+                kwargs,
+            )
+
+        return (
+            "s:%s | f:%s | %s"
+            % (self._flow_definition.session_id, self._flow_definition.key, msg),
+            kwargs,
         )
-        self.addHandler(console_log_handler.new(flow_definition))
 
     def __call__(self, message, *args, **kwargs) -> None:
         self.info(message, *args, **kwargs)
 
-    def active(self, level) -> Any:
-        return LogLevel.active(self.level, level)
+
+class FlowLogger(logging.Logger):
+    """Logger that forwards log records to FlowLogHandler."""
+
+    def __init__(
+        self,
+        name: str,
+        flow_definition: FlowDefinition,
+        executor: FlowExecutor,
+        parent: logging.Logger,
+        level=LogLevel.DEBUG,
+    ):
+        super().__init__(name, level.value)
+        self.parent = parent
+        self.addHandler(FlowLogHandler(flow_definition, executor))
 
 
-# We pass around the string representation of the log level, but
-def get_log_level(str) -> int:
-    return LogLevel[str.upper()].value
+def get_flow_logger(
+    namespace: str,
+    flow_definition: FlowDefinition,
+    executor: FlowExecutor,
+) -> FlowLoggerAdapter:
+    namespace = ".".join(["node_engine", "flow", namespace])
+    logger = FlowLogger(namespace, flow_definition, executor, flow_logger)
+    return FlowLoggerAdapter(
+        logger,
+        flow_definition=flow_definition,
+        executor=executor,
+        component_label="",
+    )
+
+
+def get_component_logger(
+    component_class: type,
+    component_key: str,
+    flow_definition: FlowDefinition,
+    executor: FlowExecutor,
+) -> FlowLoggerAdapter:
+    namespace = "node_engine.flow.component"
+    logger = FlowLogger(namespace, flow_definition, executor, flow_logger)
+    return FlowLoggerAdapter(
+        logger,
+        flow_definition=flow_definition,
+        executor=executor,
+        component_label=f"{component_class.__name__}:{component_key}",
+    )

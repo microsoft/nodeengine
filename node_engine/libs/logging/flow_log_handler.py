@@ -9,32 +9,44 @@ from node_engine.libs.context import Context
 from node_engine.models.flow_definition import FlowDefinition
 from node_engine.models.flow_event import FlowEvent
 from node_engine.models.flow_executor import FlowExecutor
+from node_engine.models.log_item import LevelEnum, LogItem
 
 
-class EventLoggerHandler(logging.Handler):
+class FlowLogHandler(logging.Handler):
     def __init__(
         self,
-        namespace: str,
         flow_definition: FlowDefinition,
-        executor: FlowExecutor,
-        level=logging.DEBUG,
+        flow_executor: FlowExecutor,
     ) -> None:
         super().__init__()
-        self.namespace = namespace
         self.flow_definition = flow_definition
-        self.level = level
-        self.runtime = executor
-
+        self.flow_executor = flow_executor
         self.background_tasks: set[asyncio.Task] = set()
 
     def emit(self, record) -> None:
+        self.emit_status_log(record)
+        self.emit_log_event(record)
+
+    def emit_status_log(self, record) -> None:
+        try:
+            self.flow_definition.status.log.append(
+                LogItem(
+                    namespace=record.name,
+                    level=LevelEnum[record.levelname.lower()],
+                    message=record.getMessage(),
+                )
+            )
+        except Exception as e:
+            print("Exception:", e)
+
+    def emit_log_event(self, record) -> None:
         context = Context(self.flow_definition)
 
         if not context.get("stream_log"):
             return
 
         data: dict[str, Any] = {
-            "namespace": self.namespace,
+            "namespace": record.name or "",
             "level": record.levelname.lower(),
             "message": record.getMessage(),
         }
@@ -48,7 +60,7 @@ class EventLoggerHandler(logging.Handler):
             data=json.dumps(data),
         )
 
-        task = asyncio.create_task(self.runtime.emit(message))
+        task = asyncio.create_task(self.flow_executor.emit(message))
         # Add task to the set. This creates a strong reference.
         self.background_tasks.add(task)
         # To prevent keeping references to finished tasks forever,
