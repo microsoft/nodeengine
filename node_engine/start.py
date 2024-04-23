@@ -11,16 +11,16 @@ from node_engine.libs.logging import console_log_handler
 
 from . import service
 
-logging.basicConfig(
-    level=logging.DEBUG,
-    format="%(name)35s | %(message)s",
-    handlers=[console_log_handler.new()],
-)
-
-logger = logging.getLogger(__name__)
-
 
 def main():
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format="%(name)35s | %(message)s",
+        handlers=[console_log_handler.new()],
+    )
+
+    logger = logging.getLogger(__name__)
+
     parser = argparse.ArgumentParser(
         prog="node-engine-service",
         description="Node Engine Service",
