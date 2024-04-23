@@ -1,10 +1,11 @@
 # Copyright (c) Microsoft. All rights reserved.
 
 import asyncio
+import logging
 import traceback
 
 from node_engine.libs import debug_collector
-from node_engine.libs.log import Log
+from node_engine.libs.log import get_flow_logger
 from node_engine.libs.node_engine_component import NodeEngineComponent
 from node_engine.libs.registry import Registry
 from node_engine.libs.utility import continue_flow, exit_flow_with_error
@@ -41,7 +42,7 @@ class Runtime:
         self, flow_definition: FlowDefinition, tunnel_authorization: str | None = None
     ) -> FlowDefinition:
 
-        log = Log("runtime", flow_definition, executor=self)
+        log = get_flow_logger("runtime", flow_definition, executor=self)
         log("Invoking flow")
 
         # Ensure there is at least one component in the flow.
@@ -134,7 +135,7 @@ class Runtime:
         """
         Executes the next component in the flow.
         """
-        log = Log("runtime", flow_definition, executor=self)
+        log = get_flow_logger("runtime", flow_definition, executor=self)
 
         # Find the next component to execute by key
         flow_component = None
@@ -212,7 +213,7 @@ class Runtime:
         self,
         message: str,
         flow_definition: FlowDefinition,
-        log: Log,
+        log: logging.Logger | logging.LoggerAdapter,
         component: NodeEngineComponent | None = None,
     ):
         debug_information = debug_collector.collect(

@@ -5,10 +5,9 @@ import time
 from abc import ABC, abstractmethod
 from typing import Any
 
-from node_engine.libs import debug_collector
+from node_engine.libs import debug_collector, log
 from node_engine.libs.component_config import ComponentConfig
 from node_engine.libs.context import Context
-from node_engine.libs.log import Log
 from node_engine.libs.telemetry import Telemetry
 from node_engine.libs.utility import continue_flow, exit_flow_with_error
 from node_engine.models.flow_definition import FlowDefinition
@@ -32,8 +31,9 @@ class NodeEngineComponent(ABC):
         self.tunnel_authorization = tunnel_authorization
         self.code = None
         self.runtime = executor
-        self.log = Log(
-            f"{self.__class__.__name__}:{component_key}",
+        self.log = log.get_component_logger(
+            component_class=self.__class__,
+            component_key=component_key,
             flow_definition=flow_definition,
             executor=executor,
         )
